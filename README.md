@@ -1,42 +1,213 @@
-# guru-app
+# 🎨 Guru App (Frontend)
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend aplikasi **Manajemen Data Guru** yang dibuat menggunakan **Vue 3** dan terhubung dengan **REST API Spring Boot**.
 
-## Recommended IDE Setup
+Aplikasi ini memungkinkan pengguna untuk:
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Login ke sistem
+- Melihat daftar guru
+- Menambahkan data guru
+- Mengedit data guru
+- Mengubah status guru (Aktif / Non-Aktif)
 
-## Recommended Browser Setup
+⚠️ Catatan:  
+Sesuai requirement tugas, **tidak ada fitur delete data guru**.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+---
 
-## Type Support for `.vue` Imports in TS
+# ⚙️ Teknologi yang Digunakan
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Vue 3
+- Vue Router
+- Tailwind CSS
+- DaisyUI
+- Fetch API
+- Vite
 
-## Customize configuration
+---
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+# 🗂️ Struktur Project
 
-## Project Setup
+```
+guru-app
+│
+├── public
+│
+├── src
+│   │
+│   ├── assets
+│   │   └── main.css
+│   │
+│   ├── components
+│   │
+│   ├── router
+│   │   └── index.ts
+│   │
+│   ├── views
+│   │   ├── Login.vue
+│   │   ├── Dashboard.vue
+│   │   └── GuruForm.vue
+│   │
+│   ├── App.vue
+│   └── main.ts
+│
+└── package.json
+```
 
-```sh
+---
+
+# 🛠️ Setup Project
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/username/guru-app.git
+cd guru-app
+```
+
+---
+
+## 2️⃣ Install Dependencies
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+---
 
-```sh
+## 3️⃣ Jalankan Frontend
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Aplikasi akan berjalan di:
 
-```sh
-npm run build
 ```
+http://localhost:5173
+```
+
+---
+
+# 🔗 Koneksi ke Backend
+
+Frontend terhubung dengan backend Spring Boot melalui REST API.
+
+Contoh endpoint:
+
+```
+http://localhost:8083/api/teachers
+```
+
+---
+
+# 🔐 Authentication
+
+Aplikasi menggunakan **Basic Authentication** untuk mengakses API.
+
+Contoh implementasi di Vue:
+
+```javascript
+const username = "admin"
+const password = "admin123"
+
+const token = btoa(`${username}:${password}`)
+
+fetch("http://localhost:8083/api/teachers", {
+  method: "GET",
+  headers: {
+    Authorization: `Basic ${token}`
+  }
+})
+```
+
+---
+
+# 📄 Halaman Aplikasi
+
+## 1️⃣ Login Page
+
+Halaman login untuk masuk ke dalam sistem.
+
+User harus memasukkan:
+
+- Username
+- Password
+
+Jika berhasil login, user akan diarahkan ke halaman **Dashboard**.
+
+---
+
+## 2️⃣ Dashboard
+
+Menampilkan daftar guru dalam bentuk tabel.
+
+Informasi yang ditampilkan:
+
+- Nama Guru
+- Mata Pelajaran
+- Status (Aktif / Non-Aktif)
+
+Fitur:
+
+- Edit data guru
+- Navigasi ke halaman tambah guru
+
+---
+
+## 3️⃣ Form Tambah Guru
+
+Digunakan untuk menambahkan data guru baru.
+
+Field yang tersedia:
+
+- Nama Guru
+- Mata Pelajaran
+- Status Aktif
+
+---
+
+## 4️⃣ Edit Guru
+
+Digunakan untuk mengubah data guru yang sudah ada.
+
+User dapat:
+
+- Mengubah nama
+- Mengubah mata pelajaran
+- Mengubah status aktif / non aktif
+
+---
+
+# 🔄 Alur Sistem
+
+1. User membuka aplikasi frontend.
+2. User diarahkan ke halaman **Login**.
+3. User memasukkan username dan password.
+4. Setelah login berhasil, user masuk ke halaman **Dashboard**.
+5. Dashboard menampilkan daftar guru.
+6. User dapat:
+   - Menambahkan guru
+   - Mengedit data guru
+   - Mengubah status guru.
+
+---
+
+# 🚫 Batasan Sistem
+
+Sesuai requirement tugas:
+
+- ❌ Tidak ada fitur delete guru
+- ❌ Tidak ada penghapusan data
+- ✔ Hanya **Create, Read, Update**
+
+---
+
+# 👤 Author
+
+Frontend dibuat menggunakan:
+
+- Vue 3
+- Tailwind CSS
+- DaisyUI
+- REST API Integration
