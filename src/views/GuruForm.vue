@@ -39,14 +39,10 @@
 
 
 <script setup lang="ts">
+import type { Guru } from "@/types/Guru";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-interface Guru {
-  name: string;
-  subject: string;
-  status: boolean;
-}
 
 const router = useRouter();
 
@@ -66,7 +62,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-const API = "http://localhost:8083/api/teachers";
+const API = "http://25.43.108.74:8083/api/teachers";
 
 // SIMPAN DATA
 const saveGuru = async () => {

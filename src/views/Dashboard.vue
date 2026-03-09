@@ -103,6 +103,7 @@ const headers = {
 const API = "http://25.43.108.74:8083/api/teachers"
 
 
+
 // NAVIGASI TAMBAH GURU
 const openAdd = () => {
 
@@ -142,10 +143,12 @@ const updateGuru = async () => {
     headers,
 
     body:JSON.stringify({
-      name:form.value.name,
-      subject:form.value.subject,
+  name:form.value.name,
+       subject:form.value.subject,
       status:form.value.status
-    })
+     })
+
+    
 
   })
 
