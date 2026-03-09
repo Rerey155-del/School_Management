@@ -3,12 +3,12 @@
     <h1 class="text-2xl font-bold mb-6 text-center">Tambah Guru</h1>
 
     <!-- Nip -->
-    <input
+    <!-- <input
       v-model="form.nip"
       type="text"
       placeholder="Nip"
       class="input input-bordered w-full mb-3"
-    />
+    /> -->
     <!-- Nama -->
     <input
       v-model="form.name"
@@ -70,8 +70,8 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-const API = "http://25.31.76.128:8082/api/teachers"
-// const API = "http://25.43.108.74:8083/api/teachers"
+// const API = "http://25.31.76.128:8082/api/teachers"
+const API = "http://25.43.108.74:8083/api/teachers"
 
 // SIMPAN DATA
 const saveGuru = async () => {

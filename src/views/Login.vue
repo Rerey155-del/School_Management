@@ -78,15 +78,28 @@ const handleLogin = async () => {
     // encode username:password
     const token = btoa(`${username.value}:${password.value}`)
 
-    const response = await fetch("http://25.31.76.128:8082/api/teachers",{
+    // const response = await fetch("http://25.31.76.128:8082/api/teachers",{
 
-      method:"GET",
+    //   method:"GET",
 
-      headers:{
-        "Authorization":`Basic ${token}`,
-        "Content-Type":"application/json"
-      }
+    //   headers:{
+    //     "Authorization":`Basic ${token}`,
+    //     "Content-Type":"application/json"
+    //   }
 
+    // })
+    
+    // Memanggil API Backend menggunakan native fetch dengan URL lengkap
+    const response = await fetch("http://localhost:8083/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include", // Penting untuk menyimpan session di browser
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value
+      })
     })
     
 

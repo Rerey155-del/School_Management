@@ -9,7 +9,7 @@
     <table class="table table-zebra">
       <thead>
         <tr>
-          <th>Nip</th>
+          <!-- <th>Nip</th> -->
           <th>Nama</th>
           <th>Mata Pelajaran</th>
           <th>Status</th>
@@ -20,7 +20,7 @@
       <tbody>
         <tr v-for="g in guruList" :key="g.id">
 
-          <td>{{ g.nip }}</td>
+          <!-- <td>{{ g.nip }}</td> -->
           <td>{{ g.name }}</td>
           <td>{{ g.subject }}</td>
 
@@ -43,7 +43,7 @@
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-3">Edit Guru</h3>
 
-        <input v-model="form.nip" class="input input-bordered w-full mb-3" placeholder="Nip" />
+        <!-- <input v-model="form.nip" class="input input-bordered w-full mb-3" placeholder="Nip" /> -->
         <input v-model="form.name" class="input input-bordered w-full mb-3" placeholder="Nama Guru" />
 
         <input v-model="form.subject" class="input input-bordered w-full mb-3" placeholder="Mata Pelajaran" />
@@ -97,8 +97,8 @@ const headers = {
   "Content-Type": "application/json"
 }
 
-// const API = "http://25.43.108.74:8083/api/teachers"
-const API = "http://25.31.76.128:8082/api/teachers"
+const API = "http://25.43.108.74:8083/api/teachers"
+// const API = "http://25.31.76.128:8082/api/teachers"
 
 
 
@@ -152,8 +152,6 @@ const updateGuru = async () => {
       subject: form.value.subject,
       status: form.value.status
     })
-
-
 
   })
 
