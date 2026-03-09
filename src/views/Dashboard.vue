@@ -100,7 +100,7 @@ const headers = {
   "Content-Type":"application/json"
 }
 
-const API = "http://25.43.108.74:8083/api/teachers"
+const API = "http://localhost:8083/api/teachers"
 
 
 
@@ -114,13 +114,21 @@ const openAdd = () => {
 
 // GET DATA
 const fetchGuru = async () => {
-
-  const response = await fetch(API,{headers})
-
-  const result = await response.json()
-
-  guruList.value = result.data
-
+  try {
+    const response = await fetch(API, { 
+      headers,
+      credentials: "include" // Menggunakan session login
+    })
+    
+    if (!response.ok) throw new Error("Gagal mengambil data dari server")
+    
+    const result = await response.json()
+    console.log("Data Guru:", result.data)
+    guruList.value = result.data || []
+  } catch (error) {
+    console.error("Fetch Error:", error)
+    alert("Gagal mengambil data guru. Pastikan backend berjalan.")
+  }
 }
 
 

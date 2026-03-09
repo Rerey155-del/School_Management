@@ -62,7 +62,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-const API = "http://25.43.108.74:8083/api/teachers";
+const API = "http://localhost:8083/api/teachers";
 
 // SIMPAN DATA
 const saveGuru = async () => {
@@ -74,9 +74,8 @@ const saveGuru = async () => {
 
   const response = await fetch(API, {
     method: "POST",
-
     headers,
-
+    credentials: "include", // Simpan session
     body: JSON.stringify(form.value),
   });
 
