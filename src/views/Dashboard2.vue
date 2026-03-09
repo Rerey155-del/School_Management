@@ -9,7 +9,6 @@
     <table class="table table-zebra">
       <thead>
         <tr>
-          <th>Nip</th>
           <th>Nama</th>
           <th>Mata Pelajaran</th>
           <th>Status</th>
@@ -19,8 +18,6 @@
 
       <tbody>
         <tr v-for="g in guruList" :key="g.id">
-
-          <td>{{ g.nip }}</td>
           <td>{{ g.name }}</td>
           <td>{{ g.subject }}</td>
 
@@ -43,10 +40,17 @@
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-3">Edit Guru</h3>
 
-        <input v-model="form.nip" class="input input-bordered w-full mb-3" placeholder="Nip" />
-        <input v-model="form.name" class="input input-bordered w-full mb-3" placeholder="Nama Guru" />
+        <input
+          v-model="form.name"
+          class="input input-bordered w-full mb-3"
+          placeholder="Nama Guru"
+        />
 
-        <input v-model="form.subject" class="input input-bordered w-full mb-3" placeholder="Mata Pelajaran" />
+        <input
+          v-model="form.subject"
+          class="input input-bordered w-full mb-3"
+          placeholder="Mata Pelajaran"
+        />
 
         <label class="flex items-center gap-2 mb-4">
           <input type="checkbox" v-model="form.status" class="checkbox" />
@@ -58,7 +62,7 @@
             Simpan
           </button>
 
-          <button class="btn" @click="showModal = false">
+          <button class="btn" @click="showModal=false">
             Batal
           </button>
         </div>
@@ -80,11 +84,10 @@ const guruList = ref([])
 const showModal = ref(false)
 
 const form = ref({
-  id: null,
-  nip: "",
-  name: "",
-  subject: "",
-  status: true
+  id:null,
+  name:"",
+  subject:"",
+  status:true
 })
 
 const username = "admin"
@@ -93,12 +96,12 @@ const password = "admin123"
 const token = btoa(`${username}:${password}`)
 
 const headers = {
-  Authorization: `Basic ${token}`,
-  "Content-Type": "application/json"
+  Authorization:`Basic ${token}`,
+  "Content-Type":"application/json"
 }
 
 // const API = "http://25.43.108.74:8083/api/teachers"
-const API = "http://25.31.76.128:8082/api/teachers"
+const API = "http://10.57.49.101:8082/api/teachers"
 
 
 
@@ -109,14 +112,15 @@ const openAdd = () => {
 
 }
 
+
 // GET DATA
 const fetchGuru = async () => {
   try {
-    const response = await fetch(API, {
+    const response = await fetch(API, { 
       headers,
       credentials: "include" // Menggunakan session login
     })
-
+    
     if (!response.ok) throw new Error("Gagal mengambil data dari server")
     const result = await response.json()
     console.log("Data Guru:", result.data)
@@ -131,7 +135,7 @@ const fetchGuru = async () => {
 // OPEN EDIT
 const openEdit = (guru) => {
 
-  form.value = { ...guru }
+  form.value = {...guru}
 
   showModal.value = true
 
@@ -141,19 +145,18 @@ const openEdit = (guru) => {
 // UPDATE DATA
 const updateGuru = async () => {
 
-  const response = await fetch(`${API}/${form.value.id}`, {
+  const response = await fetch(`${API}/${form.value.id}`,{
 
-    method: "PUT",
+    method:"PUT",
     headers,
 
-    body: JSON.stringify({
-      nip: form.value.nip,
-      name: form.value.name,
-      subject: form.value.subject,
-      status: form.value.status
-    })
+    body:JSON.stringify({
+  name:form.value.name,
+       subject:form.value.subject,
+      status:form.value.status
+     })
 
-
+    
 
   })
 
@@ -161,7 +164,7 @@ const updateGuru = async () => {
 
   alert(result.message)
 
-  showModal.value = false
+  showModal.value=false
 
   fetchGuru()
 
