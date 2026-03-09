@@ -74,7 +74,7 @@ const API = "http://25.31.76.128:8082/api/teachers"
 
 // SIMPAN DATA
 const saveGuru = async () => {
-  if (!form.value.name  || !form.value.name || !form.value.subject) {
+  if (!form.value.nip  || !form.value.name || !form.value.subject) {
     alert("Nama dan Mata Pelajaran wajib diisi");
 
     return;
