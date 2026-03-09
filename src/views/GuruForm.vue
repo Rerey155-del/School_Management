@@ -71,10 +71,11 @@ const headers = {
 };
 
 const API = "http://25.31.76.128:8082/api/teachers"
+// const API = "http://25.43.108.74:8083/api/teachers"
 
 // SIMPAN DATA
 const saveGuru = async () => {
-  if (!form.value.nip  || !form.value.name || !form.value.subject) {
+  if ( !form.value.name || !form.value.subject) {
     alert("Nama dan Mata Pelajaran wajib diisi");
 
     return;

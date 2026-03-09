@@ -39,7 +39,6 @@
 
         <!-- BUTTON -->
         <div class="form-control mt-6">
-
           <button 
             class="btn btn-primary w-full" 
             @click="handleLogin"
@@ -89,6 +88,7 @@ const handleLogin = async () => {
       }
 
     })
+    
 
     if(response.ok){
 
@@ -108,7 +108,7 @@ const handleLogin = async () => {
   }catch(error){
 
     console.error(error)
-    alert("Server tidak bisa diakses woiii")
+    alert("Server tidak bisa diakses yaa")
 
   }
 
