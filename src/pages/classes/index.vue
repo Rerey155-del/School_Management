@@ -4,6 +4,25 @@ import { Icon } from "@iconify/vue";
 import { useClasses } from "@/composables/useClasses";
 
 const { classes } = useClasses();
+
+const i18n = {
+  brand: "SCHOOL",
+  version: "V3",
+  header: {
+    title: "Classrooms",
+    subtitle: "Structural organization of students and capacity control."
+  },
+  actions: {
+    add: "Initialize Room"
+  },
+  table: {
+    designation: "Class Designation",
+    roomId: "Room ID",
+    utilization: "Utilization",
+    actions: "Actions",
+    unit: "Students"
+  }
+};
 </script>
 
 <template>
@@ -19,7 +38,7 @@ const { classes } = useClasses();
           <Icon icon="lucide:menu" class="text-xl" />
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >SCHOOL<span class="text-primary">V3</span></span
+          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
         >
         <div class="avatar w-8 h-8 rounded-full overflow-hidden">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" />
@@ -33,10 +52,10 @@ const { classes } = useClasses();
       >
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
-            Classrooms
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/40 font-medium">
-            Structural organization of students and capacity control.
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div>
@@ -44,7 +63,7 @@ const { classes } = useClasses();
             class="btn btn-primary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-primary/20 capitalize"
           >
             <Icon icon="lucide:plus" class="text-sm" />
-            Initialize Room
+            {{ i18n.actions.add }}
           </button>
         </div>
       </header>
@@ -59,19 +78,19 @@ const { classes } = useClasses();
           <table class="table table-lg w-full">
             <thead>
               <tr
-                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-white/5"
+                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
               >
-                <th class="pl-12 py-8">Class Designation</th>
-                <th class="py-8">Room ID</th>
-                <th class="py-8">Utilization</th>
-                <th class="pr-12 py-8 text-right">Actions</th>
+                <th class="pl-12 py-8">{{ i18n.table.designation }}</th>
+                <th class="py-8">{{ i18n.table.roomId }}</th>
+                <th class="py-8">{{ i18n.table.utilization }}</th>
+                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="cls in classes"
                 :key="cls.id"
-                class="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
+                class="border-b border-base-content/5 last:border-0 hover:bg-base-content/[0.02] transition-colors"
               >
                 <td class="pl-12 py-10 font-bold text-lg text-base-content/90">
                   {{ cls.name }}
@@ -82,7 +101,7 @@ const { classes } = useClasses();
                 <td class="py-10">
                   <div class="flex items-center gap-2">
                     <span class="font-bold text-lg text-base-content/90"
-                      >{{ cls.currentStudents }} Orang</span
+                      >{{ cls.currentStudents }} {{ i18n.table.unit }}</span
                     >
                   </div>
                 </td>

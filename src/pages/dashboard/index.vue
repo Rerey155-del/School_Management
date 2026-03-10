@@ -3,6 +3,23 @@ import Sidebar from "@/components/Sidebar.vue";
 import { useDashboard } from "@/composables/useDashboard";
 
 const { stats, academicEvents, performanceProgress } = useDashboard();
+
+const i18n = {
+  brand: "SCHOOL",
+  version: "V3",
+  header: {
+    title: "Academy Dashboard",
+    subtitle: "Hello, Admin. Here's what's happening today."
+  },
+  user: {
+    role: "Administrator",
+    department: "Principal Office",
+    profile: "My Profile",
+    security: "Security",
+    logout: "Logout",
+    account: "Account Settings"
+  }
+};
 </script>
 
 <template>
@@ -18,7 +35,7 @@ const { stats, academicEvents, performanceProgress } = useDashboard();
           <i class="fas fa-bars text-xl"></i>
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >SCHOOL<span class="text-primary">V3</span></span
+          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
         >
         <div class="avatar w-8 h-8 rounded-full overflow-hidden">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" />
@@ -32,21 +49,21 @@ const { stats, academicEvents, performanceProgress } = useDashboard();
       >
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-base-content">
-            Academy Dashboard
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/60 font-medium mt-1">
-            Hello, Admin. Here's what's happening today.
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div
           class="flex items-center gap-3 bg-base-100 p-2 rounded-2xl shadow-sm border border-base-200"
         >
           <div class="hidden md:block px-4 text-right">
-            <p class="text-sm font-bold">Administrator</p>
+            <p class="text-sm font-bold">{{ i18n.user.role }}</p>
             <p
               class="text-xs text-base-content/50 uppercase tracking-widest font-bold"
             >
-              Principal Office
+              {{ i18n.user.department }}
             </p>
           </div>
           <div class="dropdown dropdown-end">
@@ -66,17 +83,17 @@ const { stats, academicEvents, performanceProgress } = useDashboard();
               tabindex="0"
               class="mt-3 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-56 border border-base-200"
             >
-              <li class="menu-title">Account Settings</li>
+              <li class="menu-title">{{ i18n.user.account }}</li>
               <li>
-                <a><i class="fas fa-user-circle"></i> My Profile</a>
+                <a><i class="fas fa-user-circle"></i> {{ i18n.user.profile }}</a>
               </li>
               <li>
-                <a><i class="fas fa-shield-alt"></i> Security</a>
+                <a><i class="fas fa-shield-alt"></i> {{ i18n.user.security }}</a>
               </li>
               <div class="divider my-1"></div>
               <li>
                 <a class="text-error font-bold"
-                  ><i class="fas fa-sign-out-alt"></i> Logout</a
+                  ><i class="fas fa-sign-out-alt"></i> {{ i18n.user.logout }}</a
                 >
               </li>
             </ul>

@@ -4,6 +4,26 @@ import { Icon } from "@iconify/vue";
 import { useSchedules } from "@/composables/useSchedules";
 
 const { schedules } = useSchedules();
+
+const i18n = {
+  brand: "SCHOOL",
+  version: "V3",
+  header: {
+    title: "Academic Timeline",
+    subtitle: "Dynamic scheduling and classroom occupancy monitoring."
+  },
+  actions: {
+    add: "Slot Allocation"
+  },
+  table: {
+    className: "Class",
+    day: "Day",
+    period: "Period / Duration",
+    instructor: "Instructor",
+    subject: "Subject",
+    actions: "Actions"
+  }
+};
 </script>
 
 <template>
@@ -19,7 +39,7 @@ const { schedules } = useSchedules();
           <Icon icon="lucide:menu" class="text-xl" />
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >SCHOOL<span class="text-primary">V3</span></span
+          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
         >
         <div class="avatar w-8 h-8 rounded-full overflow-hidden">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" />
@@ -33,10 +53,10 @@ const { schedules } = useSchedules();
       >
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
-            Academic Timeline
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/40 font-medium">
-            Dynamic scheduling and classroom occupancy monitoring.
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div>
@@ -44,7 +64,7 @@ const { schedules } = useSchedules();
             class="btn btn-primary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-primary/20 capitalize"
           >
             <Icon icon="lucide:calendar-plus" class="text-sm" />
-            Slot Allocation
+            {{ i18n.actions.add }}
           </button>
         </div>
       </header>
@@ -59,21 +79,21 @@ const { schedules } = useSchedules();
           <table class="table table-lg w-full">
             <thead>
               <tr
-                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-white/5"
+                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
               >
-                <th class="pl-12 py-8">Class</th>
-                <th class="py-8">Day</th>
-                <th class="py-8">Period / Duration</th>
-                <th class="py-8">Instructor</th>
-                <th class="py-8">Subject</th>
-                <th class="pr-12 py-8 text-right">Actions</th>
+                <th class="pl-12 py-8">{{ i18n.table.className }}</th>
+                <th class="py-8">{{ i18n.table.day }}</th>
+                <th class="py-8">{{ i18n.table.period }}</th>
+                <th class="py-8">{{ i18n.table.instructor }}</th>
+                <th class="py-8">{{ i18n.table.subject }}</th>
+                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="sch in schedules"
                 :key="sch.id"
-                class="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
+                class="border-b border-base-content/5 last:border-0 hover:bg-base-content/[0.02] transition-colors"
               >
                 <td class="pl-12 py-10 font-bold text-lg text-base-content/90">
                   {{ sch.class }}
@@ -123,9 +143,5 @@ const { schedules } = useSchedules();
 .drawer-content {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--p) / 0.1) transparent;
-}
-
-body {
-  background-color: #020617;
 }
 </style>

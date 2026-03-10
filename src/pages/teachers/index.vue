@@ -6,6 +6,34 @@ import { ref, computed } from "vue";
 
 const { teachers } = useTeachers();
 
+const i18n = {
+  brand: "SCHOOL",
+  version: "V3",
+  header: {
+    title: "Faculty Directory",
+    subtitle: "Professional profiles of administrative and teaching staff."
+  },
+  actions: {
+    search: "Search by name...",
+    add: "Add New Teacher"
+  },
+  table: {
+    identity: "Teacher Identity",
+    idNumber: "NIP / NIK",
+    email: "Institutional Email",
+    department: "Department",
+    status: "Status",
+    actions: "Actions",
+    noResults: "No results found for"
+  },
+  pagination: {
+    showing: "Showing",
+    of: "of",
+    staff: "Staff",
+    page: "Page"
+  }
+};
+
 // Search and Pagination Logic
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -48,7 +76,7 @@ const prevPage = () => {
           <Icon icon="lucide:menu" class="text-xl" />
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >SCHOOL<span class="text-primary">V3</span></span
+          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
         >
       </div>
 
@@ -59,10 +87,10 @@ const prevPage = () => {
       >
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
-            Faculty Directory
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/40 font-medium">
-            Professional profiles of administrative and teaching staff.
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div class="flex items-center gap-3">
@@ -76,7 +104,7 @@ const prevPage = () => {
               v-model="searchQuery"
               @input="currentPage = 1"
               type="text"
-              placeholder="Search by name..."
+              :placeholder="i18n.actions.search"
               class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
             />
           </div>
@@ -84,7 +112,7 @@ const prevPage = () => {
             class="btn btn-primary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-primary/20 capitalize"
           >
             <Icon icon="lucide:user-plus" class="text-sm" />
-            Add New Teacher
+            {{ i18n.actions.add }}
           </button>
         </div>
       </header>
@@ -99,14 +127,14 @@ const prevPage = () => {
           <table class="table table-lg w-full">
             <thead>
               <tr
-                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-white/5"
+                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
               >
-                <th class="pl-12 py-8">Teacher Identity</th>
-                <th class="py-8">NIP / NIK</th>
-                <th class="py-8">Institutional Email</th>
-                <th class="py-8 text-center">Department</th>
-                <th class="py-8 text-center">Status</th>
-                <th class="pr-12 py-8 text-right">Actions</th>
+                <th class="pl-12 py-8">{{ i18n.table.identity }}</th>
+                <th class="py-8">{{ i18n.table.idNumber }}</th>
+                <th class="py-8">{{ i18n.table.email }}</th>
+                <th class="py-8 text-center">{{ i18n.table.department }}</th>
+                <th class="py-8 text-center">{{ i18n.table.status }}</th>
+                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
@@ -173,7 +201,7 @@ const prevPage = () => {
                   colspan="6"
                   class="py-20 text-center text-base-content/20 font-bold italic"
                 >
-                  No results found for "{{ searchQuery }}"
+                  {{ i18n.table.noResults }} "{{ searchQuery }}"
                 </td>
               </tr>
             </tbody>
@@ -182,29 +210,29 @@ const prevPage = () => {
 
         <!-- Pagination Controls -->
         <div
-          class="p-6 border-t border-white/5 flex items-center justify-between bg-black/10"
+          class="p-6 border-t border-base-content/5 flex items-center justify-between bg-base-content/5"
         >
-          <span class="text-white/20 text-sm font-bold"
-            >Showing {{ paginatedTeachers.length }} of
-            {{ filteredTeachers.length }} Staff</span
+          <span class="text-base-content/20 text-sm font-bold"
+            >{{ i18n.pagination.showing }} {{ paginatedTeachers.length }} {{ i18n.pagination.of }}
+            {{ filteredTeachers.length }} {{ i18n.pagination.staff }}</span
           >
-          <div class="join bg-[#020617]/50 rounded-xl border border-white/5">
+          <div class="join bg-base-200/50 rounded-xl border border-base-content/5">
             <button
               @click="prevPage"
               :disabled="currentPage === 1"
-              class="btn btn-ghost join-item btn-sm text-white/40 disabled:opacity-10"
+              class="btn btn-ghost join-item btn-sm text-base-content/40 disabled:opacity-10"
             >
               <Icon icon="lucide:chevron-left" />
             </button>
             <button
               class="btn btn-ghost join-item btn-sm text-primary font-black px-4"
             >
-              Page {{ currentPage }}
+              {{ i18n.pagination.page }} {{ currentPage }}
             </button>
             <button
               @click="nextPage"
               :disabled="currentPage >= totalPages"
-              class="btn btn-ghost join-item btn-sm text-white/40 disabled:opacity-10"
+              class="btn btn-ghost join-item btn-sm text-base-content/40 disabled:opacity-10"
             >
               <Icon icon="lucide:chevron-right" />
             </button>

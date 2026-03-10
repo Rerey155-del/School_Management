@@ -1,9 +1,32 @@
 <script setup lang="ts">
 import Sidebar from "@/components/Sidebar.vue";
 import { useSettings } from "@/composables/useSettings";
+const { profile, preferences, security, updateProfile, changePassword } = useSettings();
 
-const { profile, preferences, security, updateProfile, changePassword } =
-  useSettings();
+const i18n = {
+  brand: "SCHOOL",
+  version: "V3",
+  header: {
+    title: "Settings",
+    subtitle: "Manage your account settings and application preferences."
+  },
+  profile: {
+    title: "Admin Profile",
+    username: "Username",
+    password: "Password",
+    update: "Update Profile"
+  },
+  preferences: {
+    title: "App Preferences",
+    darkMode: "Dark Mode",
+    darkModeDesc: "Turn on dark theme for the dashboard."
+  },
+  security: {
+    title: "Security Settings",
+    lastChange: "Last changed",
+    change: "Change Password"
+  }
+};
 </script>
 
 <template>
@@ -19,7 +42,7 @@ const { profile, preferences, security, updateProfile, changePassword } =
           <i class="fas fa-bars text-xl"></i>
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >SCHOOL<span class="text-primary">V3</span></span
+          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
         >
         <div class="avatar w-8 h-8 rounded-full overflow-hidden">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" />
@@ -29,10 +52,10 @@ const { profile, preferences, security, updateProfile, changePassword } =
       <!-- Header Section -->
       <header class="mb-10" data-aos="fade-down">
         <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
-          Settings
+          {{ i18n.header.title }}
         </h1>
         <p class="text-base-content/40 font-medium tracking-tight">
-          Kelola pengaturan akun dan preferensi aplikasi Anda.
+          {{ i18n.header.subtitle }}
         </p>
       </header>
 
@@ -43,14 +66,14 @@ const { profile, preferences, security, updateProfile, changePassword } =
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <h2 class="text-xl font-bold text-base-content mb-8">Admin Profile</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">{{ i18n.profile.title }}</h2>
 
           <div class="space-y-6">
             <div class="form-control w-full">
               <label class="label mb-1">
                 <span
-                  class="label-text text-white/40 font-bold uppercase text-[10px] tracking-widest"
-                  >Username</span
+                  class="label-text text-base-content/40 font-bold uppercase text-[10px] tracking-widest"
+                  >{{ i18n.profile.username }}</span
                 >
               </label>
               <input
@@ -63,8 +86,8 @@ const { profile, preferences, security, updateProfile, changePassword } =
             <div class="form-control w-full">
               <label class="label mb-1">
                 <span
-                  class="label-text text-white/40 font-bold uppercase text-[10px] tracking-widest"
-                  >Password</span
+                  class="label-text text-base-content/40 font-bold uppercase text-[10px] tracking-widest"
+                  >{{ i18n.profile.password }}</span
                 >
               </label>
               <input
@@ -79,7 +102,7 @@ const { profile, preferences, security, updateProfile, changePassword } =
                 @click="updateProfile"
                 class="btn btn-primary rounded-xl px-8 font-bold shadow-lg shadow-primary/20 capitalize"
               >
-                Update Profile
+                {{ i18n.profile.update }}
               </button>
             </div>
           </div>
@@ -91,13 +114,13 @@ const { profile, preferences, security, updateProfile, changePassword } =
           data-aos="fade-up"
           data-aos-delay="200"
         >
-          <h2 class="text-xl font-bold text-base-content mb-8">App Preferences</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">{{ i18n.preferences.title }}</h2>
 
           <div class="flex items-center justify-between">
             <div>
-              <p class="font-bold text-base-content/90">Dark Mode</p>
+              <p class="font-bold text-base-content/90">{{ i18n.preferences.darkMode }}</p>
               <p class="text-sm text-base-content/30 font-medium">
-                Turn on dark theme for the dashboard.
+                {{ i18n.preferences.darkModeDesc }}
               </p>
             </div>
             <input
@@ -114,17 +137,17 @@ const { profile, preferences, security, updateProfile, changePassword } =
           data-aos="fade-up"
           data-aos-delay="300"
         >
-          <h2 class="text-xl font-bold text-base-content mb-8">Security Settings</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">{{ i18n.security.title }}</h2>
 
           <p class="text-sm text-base-content/30 font-medium mb-6">
-            Terakhir diubah {{ security.lastPasswordChange }}.
+            {{ i18n.security.lastChange }} {{ security.lastPasswordChange }}.
           </p>
 
           <button
             @click="changePassword"
             class="btn btn-outline border-base-content/10 hover:bg-base-content/5 text-base-content/90 rounded-xl px-8 font-bold capitalize"
           >
-            Change Password
+            {{ i18n.security.change }}
           </button>
         </section>
       </div>

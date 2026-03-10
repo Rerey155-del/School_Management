@@ -6,6 +6,32 @@ import { ref, computed } from "vue";
 
 const { subjects } = useSubjects();
 
+const i18n = {
+  brand: "SCHOOL",
+  version: "V3",
+  header: {
+    title: "Academic Subjects",
+    subtitle: "Curriculum management for all grades and specialization."
+  },
+  actions: {
+    search: "Search by name...",
+    add: "Define New Subject"
+  },
+  table: {
+    name: "Subject Name",
+    code: "Academic Code",
+    metadata: "Metadata",
+    actions: "Actions",
+    noResults: "No results found for"
+  },
+  pagination: {
+    showing: "Showing",
+    of: "of",
+    subjects: "Subjects",
+    page: "Page"
+  }
+};
+
 // Search and Pagination Logic
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -48,7 +74,7 @@ const prevPage = () => {
           <Icon icon="lucide:menu" class="text-xl" />
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >SCHOOL<span class="text-primary">V3</span></span
+          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
         >
       </div>
 
@@ -58,11 +84,11 @@ const prevPage = () => {
         data-aos="fade-down"
       >
         <div>
-          <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">
-            Academic Subjects
+          <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/40 font-medium">
-            Curriculum management for all grades and specialization.
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div class="flex items-center gap-3">
@@ -70,21 +96,21 @@ const prevPage = () => {
           <div class="relative group">
             <Icon
               icon="lucide:search"
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors"
             />
             <input
               v-model="searchQuery"
               @input="currentPage = 1"
               type="text"
-              placeholder="Search by name..."
-              class="input bg-[#0f172a]/50 border-white/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-white font-medium"
+              :placeholder="i18n.actions.search"
+              class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
             />
           </div>
           <button
             class="btn btn-primary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-primary/20 capitalize"
           >
             <Icon icon="lucide:plus" class="text-sm" />
-            Define New Subject
+            {{ i18n.actions.add }}
           </button>
         </div>
       </header>
@@ -99,19 +125,19 @@ const prevPage = () => {
           <table class="table table-lg w-full">
             <thead>
               <tr
-                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-white/5"
+                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
               >
-                <th class="pl-12 py-8">Subject Name</th>
-                <th class="py-8">Academic Code</th>
-                <th class="py-8">Metadata</th>
-                <th class="pr-12 py-8 text-right">Actions</th>
+                <th class="pl-12 py-8">{{ i18n.table.name }}</th>
+                <th class="py-8">{{ i18n.table.code }}</th>
+                <th class="py-8">{{ i18n.table.metadata }}</th>
+                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="sub in paginatedSubjects"
                 :key="sub.id"
-                class="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
+                class="border-b border-base-content/5 last:border-0 hover:bg-base-content/[0.02] transition-colors"
               >
                 <td class="pl-12 py-10 font-bold text-lg text-primary">
                   {{ sub.name }}
@@ -150,7 +176,7 @@ const prevPage = () => {
                   colspan="4"
                   class="py-20 text-center text-base-content/20 font-bold italic"
                 >
-                  No results found for "{{ searchQuery }}"
+                  {{ i18n.table.noResults }} "{{ searchQuery }}"
                 </td>
               </tr>
             </tbody>
@@ -162,8 +188,8 @@ const prevPage = () => {
           class="p-6 border-t border-base-content/5 flex items-center justify-between bg-base-content/5"
         >
           <span class="text-base-content/20 text-sm font-bold"
-            >Showing {{ paginatedSubjects.length }} of
-            {{ filteredSubjects.length }} Subjects</span
+            >{{ i18n.pagination.showing }} {{ paginatedSubjects.length }} {{ i18n.pagination.of }}
+            {{ filteredSubjects.length }} {{ i18n.pagination.subjects }}</span
           >
           <div class="join bg-base-200/50 rounded-xl border border-base-content/5">
             <button
@@ -176,7 +202,7 @@ const prevPage = () => {
             <button
               class="btn btn-ghost join-item btn-sm text-primary font-black px-4"
             >
-              Page {{ currentPage }}
+              {{ i18n.pagination.page }} {{ currentPage }}
             </button>
             <button
               @click="nextPage"

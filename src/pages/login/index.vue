@@ -12,9 +12,32 @@ const password = ref("");
 const isLoading = ref(false);
 const error = ref("");
 
+const i18n = {
+  brand: "School",
+  version: "V3",
+  subtitle: "Professional Management Suite",
+  errors: {
+    emptyFields: "Please enter both username and password.",
+    invalid: "Invalid credentials. Please try again."
+  },
+  labels: {
+    username: "Username",
+    password: "Password",
+    remember: "Remember me",
+    forgot: "Forgot Password?",
+    authorize: "Authorize Access",
+    copyright: "2024 SchoolV3 Integrated Systems."
+  },
+  placeholders: {
+    username: "Enter your username",
+    password: "••••••••"
+  },
+  rights: "All rights reserved."
+};
+
 const handleLogin = async () => {
   if (!username.value || !password.value) {
-    error.value = "Please enter both username and password.";
+    error.value = i18n.errors.emptyFields;
     return;
   }
 
@@ -27,7 +50,7 @@ const handleLogin = async () => {
     if (success) {
       router.push("/");
     } else {
-      error.value = "Invalid credentials. Please try again.";
+      error.value = i18n.errors.invalid;
     }
     isLoading.value = false;
   }, 1000);
@@ -56,7 +79,7 @@ const handleLogin = async () => {
         <h1 class="text-3xl font-black text-base-content tracking-tight uppercase">
           School<span class="text-primary font-black">V3</span>
         </h1>
-        <p class="text-base-content/40 font-medium mt-2">Professional Management Suite</p>
+        <p class="text-base-content/40 font-medium mt-2">{{ i18n.subtitle }}</p>
       </div>
 
       <!-- Login Form -->
@@ -67,7 +90,7 @@ const handleLogin = async () => {
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Username</label>
+          <label class="text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">{{ i18n.labels.username }}</label>
           <div class="relative group">
             <Icon
               icon="lucide:user"
@@ -76,7 +99,7 @@ const handleLogin = async () => {
             <input
               v-model="username"
               type="text"
-              placeholder="Enter your username"
+              :placeholder="i18n.placeholders.username"
               class="input bg-base-200/50 border-base-content/5 rounded-2xl pl-12 w-full focus:border-primary/50 text-base-content font-medium h-14"
               required
             />
@@ -84,7 +107,7 @@ const handleLogin = async () => {
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Password</label>
+          <label class="text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">{{ i18n.labels.password }}</label>
           <div class="relative group">
             <Icon
               icon="lucide:lock"
@@ -93,7 +116,7 @@ const handleLogin = async () => {
             <input
               v-model="password"
               type="password"
-              placeholder="••••••••"
+              :placeholder="i18n.placeholders.password"
               class="input bg-base-200/50 border-base-content/5 rounded-2xl pl-12 w-full focus:border-primary/50 text-base-content font-medium h-14"
               required
             />
@@ -103,9 +126,9 @@ const handleLogin = async () => {
         <div class="flex items-center justify-between px-1">
           <label class="flex items-center gap-2 cursor-pointer group">
             <input type="checkbox" class="checkbox checkbox-primary checkbox-xs border-base-content/20 bg-base-content/5" />
-            <span class="text-xs font-bold text-base-content/40 group-hover:text-base-content/60 transition-colors">Remember me</span>
+            <span class="text-xs font-bold text-base-content/40 group-hover:text-base-content/60 transition-colors">{{ i18n.labels.remember }}</span>
           </label>
-          <a href="#" class="text-xs font-bold text-primary hover:underline underline-offset-4">Forgot Password?</a>
+          <a href="#" class="text-xs font-bold text-primary hover:underline underline-offset-4">{{ i18n.labels.forgot }}</a>
         </div>
 
         <button
@@ -114,14 +137,14 @@ const handleLogin = async () => {
           class="btn btn-primary w-full h-14 rounded-2xl font-black text-lg gap-3 shadow-xl shadow-primary/30 mt-4 border-none"
         >
           <span v-if="isLoading" class="loading loading-spinner loading-md"></span>
-          <span v-else>Authorize Access</span>
+          <span v-else>{{ i18n.labels.authorize }}</span>
           <Icon v-if="!isLoading" icon="lucide:arrow_right" class="w-5 h-5 text-white/50" />
         </button>
       </form>
 
       <!-- Footer -->
       <p class="text-center text-base-content/20 text-xs font-bold mt-10">
-        &copy; 2024 SchoolV3 Integrated Systems.<br />All rights reserved.
+        &copy; {{ i18n.labels.copyright }}<br />{{ i18n.rights }}
       </p>
     </div>
   </div>

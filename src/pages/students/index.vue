@@ -6,6 +6,33 @@ import { ref, computed } from "vue";
 
 const { students } = useStudents();
 
+const i18n = {
+  brand: "SCHOOL",
+  version: "V3",
+  header: {
+    title: "Student Register",
+    subtitle: "Complete database of enrolled students and their academic status."
+  },
+  actions: {
+    search: "Search students...",
+    register: "Register Student"
+  },
+  table: {
+    name: "Student Name",
+    nis: "NIS",
+    className: "Class",
+    status: "Enrollment Status",
+    actions: "Actions",
+    noResults: "No results found for"
+  },
+  pagination: {
+    showing: "Showing",
+    of: "of",
+    students: "Students",
+    page: "Page"
+  }
+};
+
 // Search and Pagination Logic
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -48,7 +75,7 @@ const prevPage = () => {
           <Icon icon="lucide:menu" class="text-xl" />
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >SCHOOL<span class="text-primary">V3</span></span
+          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
         >
       </div>
 
@@ -59,10 +86,10 @@ const prevPage = () => {
       >
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
-            Student Register
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/40 font-medium">
-            Complete database of enrolled students and their academic status.
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div class="flex items-center gap-3">
@@ -76,7 +103,7 @@ const prevPage = () => {
               v-model="searchQuery"
               @input="currentPage = 1"
               type="text"
-              placeholder="Search students..."
+              :placeholder="i18n.actions.search"
               class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
             />
           </div>
@@ -84,7 +111,7 @@ const prevPage = () => {
             class="btn btn-secondary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-secondary/20 capitalize"
           >
             <Icon icon="lucide:user-plus" class="text-sm" />
-            Register Student
+            {{ i18n.actions.register }}
           </button>
         </div>
       </header>
@@ -99,13 +126,13 @@ const prevPage = () => {
           <table class="table table-lg w-full">
             <thead>
               <tr
-                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-white/5"
+                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
               >
-                <th class="pl-12 py-8">Student Name</th>
-                <th class="py-8">NIS</th>
-                <th class="py-8">Class</th>
-                <th class="py-8">Enrollment Status</th>
-                <th class="pr-12 py-8 text-right">Actions</th>
+                <th class="pl-12 py-8">{{ i18n.table.name }}</th>
+                <th class="py-8">{{ i18n.table.nis }}</th>
+                <th class="py-8">{{ i18n.table.className }}</th>
+                <th class="py-8">{{ i18n.table.status }}</th>
+                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
@@ -168,7 +195,7 @@ const prevPage = () => {
                   colspan="6"
                   class="py-20 text-center text-base-content/20 font-bold italic"
                 >
-                  No results found for "{{ searchQuery }}"
+                  {{ i18n.table.noResults }} "{{ searchQuery }}"
                 </td>
               </tr>
             </tbody>
@@ -180,8 +207,8 @@ const prevPage = () => {
           class="p-6 border-t border-base-content/5 flex items-center justify-between bg-base-content/5"
         >
           <span class="text-base-content/20 text-sm font-bold"
-            >Showing {{ paginatedStudents.length }} of
-            {{ filteredStudents.length }} Students</span
+            >{{ i18n.pagination.showing }} {{ paginatedStudents.length }} {{ i18n.pagination.of }}
+            {{ filteredStudents.length }} {{ i18n.pagination.students }}</span
           >
           <div class="join bg-base-200/50 rounded-xl border border-base-content/5">
             <button
@@ -194,7 +221,7 @@ const prevPage = () => {
             <button
               class="btn btn-ghost join-item btn-sm text-secondary font-black px-4"
             >
-              Page {{ currentPage }}
+              {{ i18n.pagination.page }} {{ currentPage }}
             </button>
             <button
               @click="nextPage"
