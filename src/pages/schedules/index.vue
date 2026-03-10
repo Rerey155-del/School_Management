@@ -32,7 +32,7 @@ const { schedules } = useSchedules();
         data-aos="fade-down"
       >
         <div>
-          <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">
+          <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
             Academic Timeline
           </h1>
           <p class="text-base-content/40 font-medium">
@@ -51,7 +51,7 @@ const { schedules } = useSchedules();
 
       <!-- Schedules Table -->
       <div
-        class="bg-[#0f172a]/50 backdrop-blur-xl shadow-2xl border border-white/5 rounded-[2.5rem] overflow-hidden"
+        class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] overflow-hidden"
         data-aos="fade-right"
         data-aos-delay="200"
       >
@@ -75,10 +75,10 @@ const { schedules } = useSchedules();
                 :key="sch.id"
                 class="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
               >
-                <td class="pl-12 py-10 font-bold text-lg text-white/90">
+                <td class="pl-12 py-10 font-bold text-lg text-base-content/90">
                   {{ sch.class }}
                 </td>
-                <td class="py-10 font-bold text-lg text-white/90">
+                <td class="py-10 font-bold text-lg text-base-content/90">
                   {{ sch.day }}
                 </td>
                 <td class="py-10">
@@ -88,7 +88,7 @@ const { schedules } = useSchedules();
                     {{ sch.time }}
                   </span>
                 </td>
-                <td class="py-10 text-lg font-medium text-white/70">
+                <td class="py-10 text-lg font-medium text-base-content/70">
                   {{ sch.teacher }}
                 </td>
                 <td class="py-10 font-bold text-lg text-[#6366f1]">
@@ -100,7 +100,7 @@ const { schedules } = useSchedules();
                   >
                     <router-link
                       to="/schedules/edit"
-                      class="btn btn-ghost btn-sm btn-circle text-white"
+                      class="btn btn-ghost btn-sm btn-circle text-base-content"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </router-link>

@@ -90,7 +90,7 @@ const { stats, academicEvents, performanceProgress } = useDashboard();
           v-for="(stat, index) in stats"
           :key="stat.label"
           class="group hover:-translate-y-1 transition-all duration-300"
-          data-aos="fade-up"
+          data-aos="fade-right"
           :data-aos-delay="index * 100"
         >
           <div

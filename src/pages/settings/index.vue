@@ -28,7 +28,7 @@ const { profile, preferences, security, updateProfile, changePassword } =
 
       <!-- Header Section -->
       <header class="mb-10" data-aos="fade-down">
-        <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">
+        <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
           Settings
         </h1>
         <p class="text-base-content/40 font-medium tracking-tight">
@@ -39,11 +39,11 @@ const { profile, preferences, security, updateProfile, changePassword } =
       <div class="space-y-8 max-w-4xl">
         <!-- Admin Profile -->
         <section
-          class="bg-[#0f172a]/50 backdrop-blur-xl shadow-2xl border border-white/5 rounded-[2.5rem] p-8 lg:p-12"
+          class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] p-8 lg:p-12"
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <h2 class="text-xl font-bold text-white mb-8">Admin Profile</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">Admin Profile</h2>
 
           <div class="space-y-6">
             <div class="form-control w-full">
@@ -56,7 +56,7 @@ const { profile, preferences, security, updateProfile, changePassword } =
               <input
                 type="text"
                 v-model="profile.username"
-                class="input bg-[#020617]/50 border-white/5 rounded-xl h-14 font-bold text-white/90 focus:border-primary/50"
+                class="input bg-base-200 border-base-content/5 rounded-xl h-14 font-bold text-base-content/90 focus:border-primary/50"
               />
             </div>
 
@@ -70,7 +70,7 @@ const { profile, preferences, security, updateProfile, changePassword } =
               <input
                 type="password"
                 v-model="profile.password"
-                class="input bg-[#020617]/50 border-white/5 rounded-xl h-14 font-bold text-white/90 focus:border-primary/50"
+                class="input bg-base-200 border-base-content/5 rounded-xl h-14 font-bold text-base-content/90 focus:border-primary/50"
               />
             </div>
 
@@ -87,16 +87,16 @@ const { profile, preferences, security, updateProfile, changePassword } =
 
         <!-- App Preferences -->
         <section
-          class="bg-[#0f172a]/50 backdrop-blur-xl shadow-2xl border border-white/5 rounded-[2.5rem] p-8 lg:p-12"
+          class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] p-8 lg:p-12"
           data-aos="fade-up"
           data-aos-delay="200"
         >
-          <h2 class="text-xl font-bold text-white mb-8">App Preferences</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">App Preferences</h2>
 
           <div class="flex items-center justify-between">
             <div>
-              <p class="font-bold text-white/90">Dark Mode</p>
-              <p class="text-sm text-white/30 font-medium">
+              <p class="font-bold text-base-content/90">Dark Mode</p>
+              <p class="text-sm text-base-content/30 font-medium">
                 Turn on dark theme for the dashboard.
               </p>
             </div>
@@ -110,19 +110,19 @@ const { profile, preferences, security, updateProfile, changePassword } =
 
         <!-- Security Settings -->
         <section
-          class="bg-[#0f172a]/50 backdrop-blur-xl shadow-2xl border border-white/5 rounded-[2.5rem] p-8 lg:p-12"
+          class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] p-8 lg:p-12"
           data-aos="fade-up"
           data-aos-delay="300"
         >
-          <h2 class="text-xl font-bold text-white mb-8">Security Settings</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">Security Settings</h2>
 
-          <p class="text-sm text-white/30 font-medium mb-6">
+          <p class="text-sm text-base-content/30 font-medium mb-6">
             Terakhir diubah {{ security.lastPasswordChange }}.
           </p>
 
           <button
             @click="changePassword"
-            class="btn btn-outline border-white/10 hover:bg-white/5 text-white/90 rounded-xl px-8 font-bold capitalize"
+            class="btn btn-outline border-base-content/10 hover:bg-base-content/5 text-base-content/90 rounded-xl px-8 font-bold capitalize"
           >
             Change Password
           </button>

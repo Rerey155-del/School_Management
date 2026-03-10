@@ -32,7 +32,7 @@ const { classes } = useClasses();
         data-aos="fade-down"
       >
         <div>
-          <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">
+          <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
             Classrooms
           </h1>
           <p class="text-base-content/40 font-medium">
@@ -51,7 +51,7 @@ const { classes } = useClasses();
 
       <!-- Classrooms Table -->
       <div
-        class="bg-[#0f172a]/50 backdrop-blur-xl shadow-2xl border border-white/5 rounded-[2.5rem] overflow-hidden"
+        class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] overflow-hidden"
         data-aos="fade-right"
         data-aos-delay="200"
       >
@@ -73,15 +73,15 @@ const { classes } = useClasses();
                 :key="cls.id"
                 class="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
               >
-                <td class="pl-12 py-10 font-bold text-lg text-white/90">
+                <td class="pl-12 py-10 font-bold text-lg text-base-content/90">
                   {{ cls.name }}
                 </td>
-                <td class="py-10 font-medium text-lg text-white/40">
+                <td class="py-10 font-medium text-lg text-base-content/40">
                   {{ cls.roomId }}
                 </td>
                 <td class="py-10">
                   <div class="flex items-center gap-2">
-                    <span class="font-bold text-lg text-white/90"
+                    <span class="font-bold text-lg text-base-content/90"
                       >{{ cls.currentStudents }} Orang</span
                     >
                   </div>
@@ -92,7 +92,7 @@ const { classes } = useClasses();
                   >
                     <router-link
                       to="/classes/edit"
-                      class="btn btn-ghost btn-sm btn-circle text-white"
+                      class="btn btn-ghost btn-sm btn-circle text-base-content"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </router-link>

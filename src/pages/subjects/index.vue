@@ -91,7 +91,7 @@ const prevPage = () => {
 
       <!-- Subjects Table -->
       <div
-        class="bg-[#0f172a]/50 backdrop-blur-xl shadow-2xl border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col"
+        class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] overflow-hidden flex flex-col"
         data-aos="fade-right"
         data-aos-delay="200"
       >
@@ -113,11 +113,11 @@ const prevPage = () => {
                 :key="sub.id"
                 class="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
               >
-                <td class="pl-12 py-10 font-bold text-lg text-[#6366f1]">
+                <td class="pl-12 py-10 font-bold text-lg text-primary">
                   {{ sub.name }}
                 </td>
                 <td
-                  class="py-10 font-bold text-lg text-white/40 font-mono tracking-tighter"
+                  class="py-10 font-bold text-lg text-base-content/40 font-mono tracking-tighter"
                 >
                   {{ sub.code }}
                 </td>
@@ -126,7 +126,7 @@ const prevPage = () => {
                     <span
                       v-for="tag in sub.tags"
                       :key="tag"
-                      class="px-4 py-1.5 bg-white/5 text-white/40 rounded-lg text-[10px] font-bold border border-white/5"
+                      class="px-4 py-1.5 bg-base-content/5 text-base-content/40 rounded-lg text-[10px] font-bold border border-base-content/5"
                     >
                       {{ tag }}
                     </span>
@@ -138,7 +138,7 @@ const prevPage = () => {
                   >
                     <router-link
                       to="/subjects/edit"
-                      class="btn btn-ghost btn-sm btn-circle text-white"
+                      class="btn btn-ghost btn-sm btn-circle text-base-content"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </router-link>
@@ -148,7 +148,7 @@ const prevPage = () => {
               <tr v-if="paginatedSubjects.length === 0">
                 <td
                   colspan="4"
-                  class="py-20 text-center text-white/20 font-bold italic"
+                  class="py-20 text-center text-base-content/20 font-bold italic"
                 >
                   No results found for "{{ searchQuery }}"
                 </td>
@@ -159,17 +159,17 @@ const prevPage = () => {
 
         <!-- Pagination Controls -->
         <div
-          class="p-6 border-t border-white/5 flex items-center justify-between bg-black/10"
+          class="p-6 border-t border-base-content/5 flex items-center justify-between bg-base-content/5"
         >
-          <span class="text-white/20 text-sm font-bold"
+          <span class="text-base-content/20 text-sm font-bold"
             >Showing {{ paginatedSubjects.length }} of
             {{ filteredSubjects.length }} Subjects</span
           >
-          <div class="join bg-[#020617]/50 rounded-xl border border-white/5">
+          <div class="join bg-base-200/50 rounded-xl border border-base-content/5">
             <button
               @click="prevPage"
               :disabled="currentPage === 1"
-              class="btn btn-ghost join-item btn-sm text-white/40 disabled:opacity-10"
+              class="btn btn-ghost join-item btn-sm text-base-content/40 disabled:opacity-10"
             >
               <Icon icon="lucide:chevron-left" />
             </button>
@@ -181,7 +181,7 @@ const prevPage = () => {
             <button
               @click="nextPage"
               :disabled="currentPage >= totalPages"
-              class="btn btn-ghost join-item btn-sm text-white/40 disabled:opacity-10"
+              class="btn btn-ghost join-item btn-sm text-base-content/40 disabled:opacity-10"
             >
               <Icon icon="lucide:chevron-right" />
             </button>

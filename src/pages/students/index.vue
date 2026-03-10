@@ -58,11 +58,11 @@ const prevPage = () => {
         data-aos="fade-down"
       >
         <div>
-          <h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">
-            Students Enrollment
+          <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
+            Student Register
           </h1>
           <p class="text-base-content/40 font-medium">
-            Database of registered students and academic status.
+            Complete database of enrolled students and their academic status.
           </p>
         </div>
         <div class="flex items-center gap-3">
@@ -70,14 +70,14 @@ const prevPage = () => {
           <div class="relative group">
             <Icon
               icon="lucide:search"
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-secondary transition-colors"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors"
             />
             <input
               v-model="searchQuery"
               @input="currentPage = 1"
               type="text"
-              placeholder="Search by name..."
-              class="input bg-[#0f172a]/50 border-white/5 rounded-xl pl-12 w-64 focus:border-secondary/50 text-white font-medium"
+              placeholder="Search students..."
+              class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
             />
           </div>
           <button
@@ -91,7 +91,7 @@ const prevPage = () => {
 
       <!-- Students Table -->
       <div
-        class="bg-[#0f172a]/50 backdrop-blur-xl shadow-2xl border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col"
+        class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] overflow-hidden flex flex-col"
         data-aos="fade-right"
         data-aos-delay="200"
       >
@@ -103,8 +103,7 @@ const prevPage = () => {
               >
                 <th class="pl-12 py-8">Student Name</th>
                 <th class="py-8">NIS</th>
-                <th class="py-8">Gender</th>
-                <th class="py-8">Class Name</th>
+                <th class="py-8">Class</th>
                 <th class="py-8">Enrollment Status</th>
                 <th class="pr-12 py-8 text-right">Actions</th>
               </tr>
@@ -113,7 +112,7 @@ const prevPage = () => {
               <tr
                 v-for="student in paginatedStudents"
                 :key="student.id"
-                class="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
+                class="border-b border-base-content/5 last:border-0 hover:bg-base-content/[0.02] transition-colors"
               >
                 <td class="pl-12 py-10">
                   <div class="flex items-center gap-4">
@@ -124,21 +123,21 @@ const prevPage = () => {
                         <span>{{ student.name[0] }}</span>
                       </div>
                     </div>
-                    <span class="font-bold text-lg text-white/90">{{
+                    <span class="font-bold text-lg text-base-content/90">{{
                       student.name
                     }}</span>
                   </div>
                 </td>
                 <td
-                  class="py-10 font-bold text-lg text-white/40 font-mono tracking-tighter"
+                  class="py-10 font-bold text-lg text-base-content/40 font-mono tracking-tighter"
                 >
                   {{ student.nis }}
                 </td>
-                <td class="py-10 font-medium text-lg text-white/70">
-                  {{ student.gender }}
-                </td>
-                <td class="py-10 font-bold text-lg text-white/40">
-                  {{ student.class_name }}
+                <td class="py-10 text-center">
+                  <span
+                    class="px-5 py-2.5 bg-base-content/5 text-base-content/40 rounded-xl font-bold text-xs border border-base-content/5"
+                    >{{ student.class_name }}</span
+                  >
                 </td>
                 <td class="py-10">
                   <span
@@ -157,7 +156,7 @@ const prevPage = () => {
                   >
                     <router-link
                       to="/students/edit"
-                      class="btn btn-ghost btn-sm btn-circle text-white"
+                      class="btn btn-ghost btn-sm btn-circle text-base-content"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </router-link>
@@ -167,7 +166,7 @@ const prevPage = () => {
               <tr v-if="paginatedStudents.length === 0">
                 <td
                   colspan="6"
-                  class="py-20 text-center text-white/20 font-bold italic"
+                  class="py-20 text-center text-base-content/20 font-bold italic"
                 >
                   No results found for "{{ searchQuery }}"
                 </td>
@@ -178,17 +177,17 @@ const prevPage = () => {
 
         <!-- Pagination Controls -->
         <div
-          class="p-6 border-t border-white/5 flex items-center justify-between bg-black/10"
+          class="p-6 border-t border-base-content/5 flex items-center justify-between bg-base-content/5"
         >
-          <span class="text-white/20 text-sm font-bold"
+          <span class="text-base-content/20 text-sm font-bold"
             >Showing {{ paginatedStudents.length }} of
             {{ filteredStudents.length }} Students</span
           >
-          <div class="join bg-[#020617]/50 rounded-xl border border-white/5">
+          <div class="join bg-base-200/50 rounded-xl border border-base-content/5">
             <button
               @click="prevPage"
               :disabled="currentPage === 1"
-              class="btn btn-ghost join-item btn-sm text-white/40 disabled:opacity-10"
+              class="btn btn-ghost join-item btn-sm text-base-content/40 disabled:opacity-10"
             >
               <Icon icon="lucide:chevron-left" />
             </button>
@@ -200,7 +199,7 @@ const prevPage = () => {
             <button
               @click="nextPage"
               :disabled="currentPage >= totalPages"
-              class="btn btn-ghost join-item btn-sm text-white/40 disabled:opacity-10"
+              class="btn btn-ghost join-item btn-sm text-base-content/40 disabled:opacity-10"
             >
               <Icon icon="lucide:chevron-right" />
             </button>

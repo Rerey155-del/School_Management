@@ -36,14 +36,14 @@ const handleLogin = async () => {
 
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] p-4 relative overflow-hidden"
+    class="min-h-screen flex items-center justify-center bg-base-200 p-4 relative overflow-hidden"
   >
     <!-- Dynamic Background Elements -->
     <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full animate-pulse"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full animate-pulse" style="animation-delay: 2s"></div>
 
     <div
-      class="w-full max-w-md bg-white/5 backdrop-blur-2xl border border-white/10 p-10 rounded-[2.5rem] shadow-2xl relative z-10"
+      class="w-full max-w-md bg-base-100/50 backdrop-blur-2xl border border-base-content/10 p-10 rounded-[2.5rem] shadow-2xl relative z-10"
       data-aos="zoom-in"
     >
       <!-- Logo & Header -->
@@ -53,10 +53,10 @@ const handleLogin = async () => {
         >
           S
         </div>
-        <h1 class="text-3xl font-black text-white tracking-tight uppercase">
+        <h1 class="text-3xl font-black text-base-content tracking-tight uppercase">
           School<span class="text-primary font-black">V3</span>
         </h1>
-        <p class="text-white/40 font-medium mt-2">Professional Management Suite</p>
+        <p class="text-base-content/40 font-medium mt-2">Professional Management Suite</p>
       </div>
 
       <!-- Login Form -->
@@ -67,34 +67,34 @@ const handleLogin = async () => {
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-black uppercase tracking-widest text-white/40 ml-1">Username</label>
+          <label class="text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Username</label>
           <div class="relative group">
             <Icon
               icon="lucide:user"
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors"
             />
             <input
               v-model="username"
               type="text"
               placeholder="Enter your username"
-              class="input bg-[#0f172a]/50 border-white/5 rounded-2xl pl-12 w-full focus:border-primary/50 text-white font-medium h-14"
+              class="input bg-base-200/50 border-base-content/5 rounded-2xl pl-12 w-full focus:border-primary/50 text-base-content font-medium h-14"
               required
             />
           </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-black uppercase tracking-widest text-white/40 ml-1">Password</label>
+          <label class="text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Password</label>
           <div class="relative group">
             <Icon
               icon="lucide:lock"
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primary transition-colors"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors"
             />
             <input
               v-model="password"
               type="password"
               placeholder="••••••••"
-              class="input bg-[#0f172a]/50 border-white/5 rounded-2xl pl-12 w-full focus:border-primary/50 text-white font-medium h-14"
+              class="input bg-base-200/50 border-base-content/5 rounded-2xl pl-12 w-full focus:border-primary/50 text-base-content font-medium h-14"
               required
             />
           </div>
@@ -102,8 +102,8 @@ const handleLogin = async () => {
 
         <div class="flex items-center justify-between px-1">
           <label class="flex items-center gap-2 cursor-pointer group">
-            <input type="checkbox" class="checkbox checkbox-primary checkbox-xs border-white/20 bg-white/5" />
-            <span class="text-xs font-bold text-white/40 group-hover:text-white/60 transition-colors">Remember me</span>
+            <input type="checkbox" class="checkbox checkbox-primary checkbox-xs border-base-content/20 bg-base-content/5" />
+            <span class="text-xs font-bold text-base-content/40 group-hover:text-base-content/60 transition-colors">Remember me</span>
           </label>
           <a href="#" class="text-xs font-bold text-primary hover:underline underline-offset-4">Forgot Password?</a>
         </div>
@@ -120,7 +120,7 @@ const handleLogin = async () => {
       </form>
 
       <!-- Footer -->
-      <p class="text-center text-white/20 text-xs font-bold mt-10">
+      <p class="text-center text-base-content/20 text-xs font-bold mt-10">
         &copy; 2024 SchoolV3 Integrated Systems.<br />All rights reserved.
       </p>
     </div>
