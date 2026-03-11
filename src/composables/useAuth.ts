@@ -1,21 +1,22 @@
 import { ref, computed } from 'vue'
+import { authService, type UserType } from '@/services/authService'
 
-const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
+const user = ref<UserType | null>(JSON.parse(localStorage.getItem('user') || 'null'))
 
 export function useAuth() {
   const isAuthenticated = computed(() => !!user.value)
 
-  const login = (credentials: { username: string; token: string }) => {
-    // Simple mock login logic
-    const userData = {
-      username: credentials.username,
-      role: 'Administrator',
-      email: `${credentials.username}@school.ac.id`,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${credentials.username}`
+  const login = async (credentials: { username: string; password?: string }) => {
+    try {
+      const response = await authService.login(credentials);
+      user.value = response.user;
+      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem('token', response.token);
+      return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     }
-    user.value = userData
-    localStorage.setItem('user', JSON.stringify(userData))
-    return true
   }
 
   const logout = () => {

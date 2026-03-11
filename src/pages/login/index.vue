@@ -44,16 +44,16 @@ const handleLogin = async () => {
   isLoading.value = true;
   error.value = "";
 
-  // Simulate API delay
-  setTimeout(() => {
-    const success = login({ username: username.value, token: "mock-token-123" });
+  try {
+    const success = await login({ username: username.value, password: password.value });
     if (success) {
       router.push("/");
-    } else {
-      error.value = i18n.errors.invalid;
     }
+  } catch (err: any) {
+    error.value = i18n.errors.invalid;
+  } finally {
     isLoading.value = false;
-  }, 1000);
+  }
 };
 </script>
 
