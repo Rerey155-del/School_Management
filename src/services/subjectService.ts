@@ -8,63 +8,31 @@ export interface SubjectAutocompleteOption {
 export interface SubjectType {
   id?: number | string;
   subject_name: string;
-  academic_code: string;
-  metadata: string[] | string;
-  status?: string; // Optional field for status changes
+  academic_code?: string;
+  metadata?: string[] | string;
+  status?: string;
   deleted_at?: string | null;
 }
 
-let mockSubjects: SubjectType[] = Array.from({ length: 15 }, (_, i) => ({
-  id: i + 1,
-  subject_name: `Subject ${i + 1}`,
-  academic_code: `SUBJ${(i + 1).toString().padStart(3, '0')}`,
-  metadata: ["Core", i % 2 === 0 ? "Science" : "Language", `Grade 10`],
-  status: i % 6 === 0 ? "Non-Aktif" : "Active",
-  deleted_at: null
-}));
-
 export const subjectService = {
-  async autocompleteSubjects(query: string): Promise<SubjectAutocompleteOption[]> {
-    await new Promise(r => setTimeout(r, 300));
-    if (!query || query.length < 3) return [];
-    return mockSubjects
-      .filter(s => s.subject_name.toLowerCase().includes(query.toLowerCase()))
-      .map(s => ({ id: s.id!, name: s.subject_name }));
-  },
   async getAll(): Promise<SubjectType[]> {
-    await new Promise(r => setTimeout(r, 500));
-    return [...mockSubjects];
+    const response = await apiClient.get('/subjects');
+    return response.data;
   },
   async getById(id: number | string): Promise<SubjectType> {
-    await new Promise(r => setTimeout(r, 500));
-    const found = mockSubjects.find(t => String(t.id) === String(id));
-    if (!found) throw new Error("Subject not found");
-    return { ...found };
+    const response = await apiClient.get(`/subjects/${id}`);
+    return response.data;
   },
   async create(payload: Omit<SubjectType, 'id'>) {
-    await new Promise(r => setTimeout(r, 500));
-    const newItem = { ...payload, id: Date.now() };
-    mockSubjects.push(newItem);
-    return { ...newItem };
+    const response = await apiClient.post('/subjects', payload);
+    return response.data;
   },
   async update(id: number | string, payload: Partial<SubjectType>) {
-    await new Promise(r => setTimeout(r, 500));
-    const index = mockSubjects.findIndex(t => String(t.id) === String(id));
-    if (index === -1) throw new Error("Subject not found");
-    mockSubjects[index] = { ...mockSubjects[index], ...payload } as SubjectType;
-    return { ...mockSubjects[index] };
+    const response = await apiClient.put(`/subjects/${id}`, payload);
+    return response.data;
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    await new Promise(r => setTimeout(r, 500));
-    const index = mockSubjects.findIndex(t => String(t.id) === String(id));
-    if (index === -1) throw new Error("Subject not found");
-    (mockSubjects[index] as any)[statusField] = newValue;
-    
-    // Soft delete simulation
-    if (statusField === 'status' || statusField === 'enrollment_status') {
-      mockSubjects[index]!.deleted_at = (newValue === 'Active') ? null : new Date().toISOString();
-    }
-    
-    return { ...mockSubjects[index]! };
+    const response = await apiClient.patch(`/subjects/${id}`, { [statusField]: newValue });
+    return response.data;
   }
 };

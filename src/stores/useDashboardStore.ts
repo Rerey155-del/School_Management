@@ -1,73 +1,111 @@
 import { defineStore } from 'pinia';
-import { useTeachers } from '@/composables/useTeachers';
-import { useStudents } from '@/composables/useStudents';
-import { useClasses } from '@/composables/useClasses';
-import { useSubjects } from '@/composables/useSubjects';
+import { useTeacherStore } from './useTeacherStore';
+import { useStudentStore } from './useStudentStore';
+import { useClassStore } from './useClassStore';
+import { useSubjectStore } from './useSubjectStore';
 
+/**
+ * Interface representing the state of the dashboard store.
+ */
+interface DashboardState {
+  /** Indicates if the dashboard data is currently being fetched */
+  isLoading: boolean;
+  /** Statistics cards data (totals for teachers, students, etc.) */
+  stats: any[];
+  /** List of upcoming academic events */
+  academicEvents: any[];
+  /** Data object for the dashboard chart */
+  chartData: any;
+  /** Configuration options for the dashboard chart */
+  chartOptions: any;
+}
+
+/**
+ * Store for managing Dashboard-specific data.
+ * Aggregates data from other stores to provide a high-level overview.
+ */
 export const useDashboardStore = defineStore('dashboard', {
-  state: () => ({
+  state: (): DashboardState => ({
     isLoading: true,
-    stats: [] as any[],
-    academicEvents: [] as any[],
-    chartData: null as any,
-    chartOptions: null as any,
+    stats: [],
+    academicEvents: [],
+    chartData: null,
+    chartOptions: null,
   }),
+
   actions: {
-    async fetchDashboardData() {
+    /**
+     * Aggregates and fetches data from multiple stores to populate the dashboard.
+     * Simulates fetching of events and chart data as well.
+     */
+    async fetchDashboardData(): Promise<void> {
       this.isLoading = true;
       
-      // MENSIMULASIKAN DELAY FETCHING API selama 1.5 detik
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const { teachers } = useTeachers();
-      const { students } = useStudents();
-      const { classes } = useClasses();
-      const { subjects } = useSubjects();
+      const teacherStore = useTeacherStore();
+      const studentStore = useStudentStore();
+      const classStore = useClassStore();
+      const subjectStore = useSubjectStore();
 
-      this.stats = [
-        { label: 'Total Guru', value: teachers.value.length, icon: 'fas fa-user-tie', color: 'text-primary', bg: 'bg-primary/10' },
-        { label: 'Total Siswa', value: students.value.length, icon: 'fas fa-user-graduate', color: 'text-secondary', bg: 'bg-secondary/10' },
-        { label: 'Kelas Aktif', value: classes.value.length, icon: 'fas fa-door-open', color: 'text-accent', bg: 'bg-accent/10' },
-        { label: 'Total Subjects', value: subjects.value.length, icon: 'fas fa-book', color: 'text-info', bg: 'bg-info/10' }
-      ];
+      try {
+        // Fetch all base data from real API via their respective stores
+        await Promise.all([
+          teacherStore.fetchList(),
+          studentStore.fetchList(),
+          classStore.fetchList(),
+          subjectStore.fetchList()
+        ]);
 
-      this.academicEvents = [
-        { id: 1, title: 'Mid-term Exams Preparation', date: 'Oct 15 - Oct 22', type: 'Exam', color: 'primary' },
-        { id: 2, title: 'Parent-Teacher Meeting', date: 'Oct 25, 09:00 AM', type: 'Meeting', color: 'secondary' },
-        { id: 3, title: 'Inter-school Sport Day', date: 'Nov 02', type: 'Event', color: 'accent' },
-        { id: 4, title: 'Science Fair Submission', date: 'Nov 05', type: 'Deadline', color: 'error' }
-      ];
+        // Transform store counts into statistics objects
+        this.stats = [
+          { label: 'Total Guru', value: teacherStore.items.length, icon: 'fas fa-user-tie', color: 'text-primary', bg: 'bg-primary/10' },
+          { label: 'Total Siswa', value: studentStore.items.length, icon: 'fas fa-user-graduate', color: 'text-secondary', bg: 'bg-secondary/10' },
+          { label: 'Kelas Aktif', value: classStore.items.length, icon: 'fas fa-door-open', color: 'text-accent', bg: 'bg-accent/10' },
+          { label: 'Total Subjects', value: subjectStore.items.length, icon: 'fas fa-book', color: 'text-info', bg: 'bg-info/10' }
+        ];
 
-      this.chartData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            label: 'Average Attendance (%)',
-            data: [95, 96, 94, 98, 97, 99, 98],
-            fill: false,
-            borderColor: '#4f46e5',
-            tension: 0.4
-          },
-          {
-            label: 'Average Grades',
-            data: [82, 85, 87, 85, 88, 90, 91],
-            fill: false,
-            borderColor: '#ec4899',
-            tension: 0.4
+        // Mock events (These could also be moved to a separate service in the future)
+        this.academicEvents = [
+          { id: 1, title: 'Mid-term Exams Preparation', date: 'Oct 15 - Oct 22', type: 'Exam', color: 'primary' },
+          { id: 2, title: 'Parent-Teacher Meeting', date: 'Oct 25, 09:00 AM', type: 'Meeting', color: 'secondary' },
+          { id: 3, title: 'Inter-school Sport Day', date: 'Nov 02', type: 'Event', color: 'accent' },
+          { id: 4, title: 'Science Fair Submission', date: 'Nov 05', type: 'Deadline', color: 'error' }
+        ];
+
+        // Mock chart configuration
+        this.chartData = {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+          datasets: [
+            {
+              label: 'Average Attendance (%)',
+              data: [95, 96, 94, 98, 97, 99, 98],
+              fill: false,
+              borderColor: '#4f46e5',
+              tension: 0.4
+            },
+            {
+              label: 'Average Grades',
+              data: [82, 85, 87, 85, 88, 90, 91],
+              fill: false,
+              borderColor: '#ec4899',
+              tension: 0.4
+            }
+          ]
+        };
+
+        this.chartOptions = {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top'
+            }
           }
-        ]
-      };
+        };
 
-      this.chartOptions = {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top'
-          }
-        }
-      };
-
-      this.isLoading = false;
+      } catch (err) {
+        console.error('DashboardStore[fetchDashboardData]:', err);
+      } finally {
+        this.isLoading = false;
+      }
     }
   }
 });
