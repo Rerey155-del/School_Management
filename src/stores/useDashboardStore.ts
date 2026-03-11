@@ -10,10 +10,16 @@ import { useSubjectStore } from './useSubjectStore';
 interface DashboardState {
   /** Indicates if the dashboard data is currently being fetched */
   isLoading: boolean;
+  /** Currently active dashboard language */
+  locale: 'en' | 'id';
   /** Statistics cards data (totals for teachers, students, etc.) */
   stats: any[];
   /** List of upcoming academic events */
   academicEvents: any[];
+  /** List of recent system audit logs */
+  auditLogs: any[];
+  /** Aggregated active vs inactive teacher status data */
+  teacherStatus: { active: number; inactive: number; total: number };
   /** Data object for the dashboard chart */
   chartData: any;
   /** Configuration options for the dashboard chart */
@@ -27,8 +33,11 @@ interface DashboardState {
 export const useDashboardStore = defineStore('dashboard', {
   state: (): DashboardState => ({
     isLoading: true,
+    locale: 'id',
     stats: [],
     academicEvents: [],
+    auditLogs: [],
+    teacherStatus: { active: 0, inactive: 0, total: 0 },
     chartData: null,
     chartOptions: null,
   }),
@@ -63,12 +72,30 @@ export const useDashboardStore = defineStore('dashboard', {
           { label: 'Total Subjects', value: subjectStore.items.length, icon: 'fas fa-book', color: 'text-info', bg: 'bg-info/10' }
         ];
 
+        // Teacher status aggregation
+        const activeCount = teacherStore.items.filter(t => t.status === 'Active').length;
+        const totalTeachers = teacherStore.items.length;
+        this.teacherStatus = {
+          active: activeCount,
+          inactive: totalTeachers - activeCount,
+          total: totalTeachers
+        };
+
         // Mock events (These could also be moved to a separate service in the future)
         this.academicEvents = [
           { id: 1, title: 'Mid-term Exams Preparation', date: 'Oct 15 - Oct 22', type: 'Exam', color: 'primary' },
           { id: 2, title: 'Parent-Teacher Meeting', date: 'Oct 25, 09:00 AM', type: 'Meeting', color: 'secondary' },
           { id: 3, title: 'Inter-school Sport Day', date: 'Nov 02', type: 'Event', color: 'accent' },
           { id: 4, title: 'Science Fair Submission', date: 'Nov 05', type: 'Deadline', color: 'error' }
+        ];
+
+        // Mock Audit Logs
+        this.auditLogs = [
+          { id: 101, action: 'CREATE', entity: 'User', details: 'Added new teacher John Doe', timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
+          { id: 102, action: 'UPDATE', entity: 'Schedule', details: 'Modified Math class timings', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() },
+          { id: 103, action: 'DELETE', entity: 'Student', details: 'Removed inactive student record', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() },
+          { id: 104, action: 'CREATE', entity: 'Class', details: 'Created Class 11-Science', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() },
+          { id: 105, action: 'UPDATE', entity: 'Settings', details: 'Administrator changed global locale', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString() }
         ];
 
         // Mock chart configuration
@@ -106,6 +133,13 @@ export const useDashboardStore = defineStore('dashboard', {
       } finally {
         this.isLoading = false;
       }
+    },
+
+    /**
+     * Toggles the global dashboard locale between ID and EN.
+     */
+    toggleLocale(): void {
+      this.locale = this.locale === 'id' ? 'en' : 'id';
     }
   }
 });

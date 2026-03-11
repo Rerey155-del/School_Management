@@ -17,8 +17,12 @@ export const scheduleService = {
     return response.data;
   },
   async getById(id: number | string): Promise<ScheduleType> {
-    const response = await apiClient.get(`/schedules/${id}`);
-    return response.data;
+    const allItems = await this.getAll();
+    const item = allItems.find((s) => String(s.id) === String(id));
+    if (!item) {
+      throw new Error(`Schedule with id ${id} not found.`);
+    }
+    return item;
   },
   async create(payload: Omit<ScheduleType, 'id'>) {
     const response = await apiClient.post('/schedules', payload);
