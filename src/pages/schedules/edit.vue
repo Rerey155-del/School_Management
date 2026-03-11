@@ -25,6 +25,9 @@ const form = ref({
   status: "Active"
 });
 
+const startTime = ref("");
+const endTime = ref("");
+
 // Autocomplete Logic
 const filteredClasses = ref<ClassAutocompleteOption[]>([]);
 const searchClass = async (event: any) => {
@@ -45,6 +48,11 @@ onMounted(async () => {
   const id = route.params.id as string;
   const detail = await store.fetchDetail(id);
   if (detail) {
+    if (detail.period_duration) {
+      const times = detail.period_duration.split(' - ');
+      startTime.value = times[0] || '';
+      endTime.value = times[1] || '';
+    }
     form.value = { 
       id: detail.id as string | number, 
       class_name: detail.class_name, 
@@ -70,6 +78,7 @@ const handleSubmit = async () => {
     const putPayload = {
       ...putPayloadTemp,
       class_name: typeof putPayloadTemp.class_name === 'object' ? (putPayloadTemp.class_name as any).name : putPayloadTemp.class_name,
+      period_duration: `${startTime.value} - ${endTime.value}`,
       instructor: typeof putPayloadTemp.instructor === 'object' ? (putPayloadTemp.instructor as any).name : putPayloadTemp.instructor,
       subject: typeof putPayloadTemp.subject === 'object' ? (putPayloadTemp.subject as any).name : putPayloadTemp.subject,
     };
@@ -145,12 +154,16 @@ const i18n = {
             />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Day</span></label>
-            <input v-model="form.day" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="Monday" />
+            <label class="label"><span class="label-text font-bold">Date</span></label>
+            <input v-model="form.day" type="date" class="input input-bordered focus:border-primary rounded-xl" required />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Period / Duration</span></label>
-            <input v-model="form.period_duration" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="08:00 - 09:30" />
+            <label class="label"><span class="label-text font-bold">Duration</span></label>
+            <div class="flex items-center gap-3">
+              <input type="time" v-model="startTime" class="input input-bordered focus:border-primary rounded-xl w-full" required />
+              <span class="font-bold text-base-content/40">to</span>
+              <input type="time" v-model="endTime" class="input input-bordered focus:border-primary rounded-xl w-full" required />
+            </div>
           </div>
           <div class="form-control flex flex-col pt-1">
             <label class="label"><span class="label-text font-bold">Instructor Name</span></label>
