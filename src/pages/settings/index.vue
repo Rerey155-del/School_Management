@@ -218,10 +218,7 @@ const i18n = {
                   <th class="py-8">{{ i18n.usersTable.fullName }}</th>
                   <th class="py-8">{{ i18n.usersTable.username }}</th>
                   <th class="py-8">{{ i18n.usersTable.email }}</th>
-                  <th class="py-8">{{ i18n.usersTable.role }}</th>
-                  <th class="py-8">{{ i18n.usersTable.status }}</th>
-                  <th class="py-8">{{ i18n.usersTable.lastLogin }}</th>
-                  <th class="pr-12 py-8 text-right">{{ i18n.usersTable.actions }}</th>
+                
                 </tr>
               </thead>
               <tbody>
@@ -243,17 +240,8 @@ const i18n = {
                       {{ user.status }}
                     </span>
                   </td>
-                  <td class="py-10 text-base-content/40 text-sm font-mono">{{ user.last_login }}</td>
-                  <td class="pr-12 py-10 text-right">
-                    <div class="flex justify-end opacity-40 hover:opacity-100 transition-opacity">
-                      <button
-                        @click="() => openUserModal(user)"
-                        class="btn btn-ghost btn-sm btn-circle text-base-content"
-                      >
-                        <Icon icon="lucide:edit-3" class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+                  
+                  
                 </tr>
               </tbody>
             </table>
@@ -262,54 +250,7 @@ const i18n = {
       </div>
     </div>
 
-    <!-- Edit User Modal -->
-    <dialog class="modal font-sans" :class="{ 'modal-open': isUserModalOpen }">
-      <div class="modal-box rounded-[2rem] p-8 shadow-2xl bg-base-100 border border-base-content/5">
-        <h3 class="font-extrabold text-2xl mb-6">Edit Admin Data</h3>
-        <form @submit.prevent="handleUserUpdate" class="flex flex-col gap-4">
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Full Name</span></label>
-            <input v-model="editUserForm.full_name" type="text" class="input input-bordered focus:border-primary rounded-xl" required />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Username</span></label>
-            <input v-model="editUserForm.username" type="text" class="input input-bordered focus:border-primary rounded-xl" required />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Email</span></label>
-            <input v-model="editUserForm.email" type="email" class="input input-bordered focus:border-primary rounded-xl" required />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Role</span></label>
-            <select v-model="editUserForm.role" class="select select-bordered focus:border-primary rounded-xl" required>
-              <option value="Super Admin">Super Admin</option>
-              <option value="Admin">Admin</option>
-              <option value="Management">Management</option>
-              <option value="Staff">Staff</option>
-            </select>
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Status</span></label>
-            <select v-model="editUserForm.status" class="select select-bordered focus:border-primary rounded-xl" required>
-              <option value="Active">Active</option>
-              <option value="Suspended">Suspended</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Last Login</span></label>
-            <input v-model="editUserForm.last_login" type="text" class="input input-bordered focus:border-primary rounded-xl" required />
-          </div>
-          <div class="modal-action mt-6 gap-2">
-            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="isUserModalOpen = false">Cancel</button>
-            <button type="submit" class="btn btn-primary rounded-xl font-bold px-8 shadow-lg shadow-primary/20">Save Updates</button>
-          </div>
-        </form>
-      </div>
-      <form method="dialog" class="modal-backdrop bg-base-300/60 backdrop-blur-sm">
-        <button @click="isUserModalOpen = false">close</button>
-      </form>
-    </dialog>
+    
 
     <!-- Sidebar Component -->
     <Sidebar />
