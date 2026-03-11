@@ -217,7 +217,7 @@ const prevPage = () => {
                 <td class="pr-12 py-10 text-right">
                   <div class="flex justify-end items-center gap-3">
                     <button
-                      @click="() => openEditForm(teacher.id!)"
+                      @click="() => openEditForm(teacher.id || 0)"
                       class="btn btn-ghost btn-sm btn-circle text-base-content opacity-40 hover:opacity-100 transition-opacity"
                       title="Edit Teacher"
                     >
@@ -228,7 +228,7 @@ const prevPage = () => {
                       type="checkbox" 
                       class="toggle toggle-sm toggle-success" 
                       :checked="isStatusActive(teacher.status)" 
-                      @change="handleStatusToggle(teacher.id!, teacher.status)"
+                      @change="handleStatusToggle(teacher.id || 0, teacher.status)"
                       title="Toggle Status"
                     />
                   </div>

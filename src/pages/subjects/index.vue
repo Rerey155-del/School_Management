@@ -16,53 +16,8 @@ const openAddForm = () => {
   router.push('/subjects/add');
 };
 
-<<<<<<< Updated upstream
 const openEditForm = (id: number | string) => {
   router.push(`/subjects/edit/${id}`);
-=======
-const openEditForm = async (id: number | string) => {
-  isEditMode.value = true;
-  currentView.value = 'form';
-  const detail = await store.fetchDetail(id);
-  if (detail) {
-    form.value = { 
-      id: detail.id as string | number, 
-      subject_name: detail.subject_name, 
-      academic_code: detail.academic_code || "", 
-      metadata: Array.isArray(detail.metadata) ? detail.metadata : [],
-      status: detail.status || 'Active'
-    };
-    metadataInput.value = Array.isArray(detail.metadata) ? detail.metadata.join(", ") : "";
-  }
-};
-
-const goBack = () => {
-  currentView.value = 'list';
-};
-
-const handleSubmit = async () => {
-  try {
-    isSubmitting.value = true;
-    const finalPayload = {
-      ...form.value,
-      metadata: metadataInput.value.split(",").map(t => t.trim()).filter(Boolean)
-    };
-
-    if (isEditMode.value) {
-      const { id, ...putPayload } = finalPayload;
-      await store.updateItem(id, putPayload);
-    } else {
-      const { id, ...postPayload } = finalPayload;
-      await store.createItem(postPayload);
-    }
-    
-    await store.fetchList();
-    goBack();
-  } catch (error: any) {
-    alert(error.message || 'An error occurred');
-  } finally {
-    isSubmitting.value = false;
-  }
 };
 
 const isStatusActive = (status: string | undefined) => {
@@ -77,7 +32,6 @@ const handleStatusToggle = async (id: number | string, currentStatus: string | u
   } catch (err: any) {
     alert('Failed to toggle status: ' + (err.message || ''));
   }
->>>>>>> Stashed changes
 };
 
 const i18n = {
@@ -242,23 +196,20 @@ const prevPage = () => {
                 <td class="pr-12 py-10 text-right">
                   <div class="flex justify-end items-center gap-3">
                     <button
-                      @click="() => openEditForm(sub.id!)"
+                      @click="() => openEditForm(sub.id || 0)"
                       class="btn btn-ghost btn-sm btn-circle text-base-content opacity-40 hover:opacity-100 transition-opacity"
                       title="Edit Subject"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </button>
-<<<<<<< Updated upstream
-=======
                     <!-- Status Toggle Switch -->
                     <input 
                       type="checkbox" 
                       class="toggle toggle-sm toggle-success" 
                       :checked="isStatusActive(sub.status)" 
-                      @change="handleStatusToggle(sub.id!, sub.status)"
+                      @change="handleStatusToggle(sub.id || 0, sub.status)"
                       title="Toggle Status"
                     />
->>>>>>> Stashed changes
                   </div>
                 </td>
               </tr>

@@ -20,6 +20,20 @@ const openEditForm = (id: number | string) => {
   router.push(`/students/edit/${id}`);
 };
 
+const isStatusActive = (status: string | undefined) => {
+  if (!status) return false;
+  return status.toLowerCase() === 'active' || status.toLowerCase() === 'aktif';
+};
+
+const handleStatusToggle = async (id: number | string, currentStatus: string | undefined) => {
+  const newStatus = isStatusActive(currentStatus) ? 'Suspended' : 'Active';
+  try {
+    await store.toggleItemStatus(id, 'enrollment_status', newStatus);
+  } catch (err: any) {
+    alert('Failed to toggle status: ' + (err.message || ''));
+  }
+};
+
 const i18n = {
   brand: "SCHOOL",
   version: "V3",
@@ -200,23 +214,20 @@ const prevPage = () => {
                 <td class="pr-12 py-10 text-right">
                   <div class="flex justify-end items-center gap-3">
                     <button
-                      @click="() => openEditForm(student.id!)"
+                      @click="() => openEditForm(student.id || 0)"
                       class="btn btn-ghost btn-sm btn-circle text-base-content opacity-40 hover:opacity-100 transition-opacity"
                       title="Edit Student"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </button>
-<<<<<<< Updated upstream
-=======
                     <!-- Status Toggle Switch -->
                     <input 
                       type="checkbox" 
                       class="toggle toggle-sm toggle-success" 
                       :checked="isStatusActive(student.enrollment_status)" 
-                      @change="handleStatusToggle(student.id!, student.enrollment_status)"
+                      @change="handleStatusToggle(student.id || 0, student.enrollment_status)"
                       title="Toggle Enrollment Status"
                     />
->>>>>>> Stashed changes
                   </div>
                 </td>
               </tr>
