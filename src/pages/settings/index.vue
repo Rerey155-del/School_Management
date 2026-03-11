@@ -201,24 +201,7 @@ const i18n = {
         </section>
 
         <!-- Security Settings -->
-        <section
-          class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] p-8 lg:p-12"
-          data-aos="fade-up"
-          data-aos-delay="300"
-        >
-          <h2 class="text-xl font-bold text-base-content mb-8">{{ i18n.security.title }}</h2>
-
-          <p class="text-sm text-base-content/30 font-medium mb-6">
-            {{ i18n.security.lastChange }} {{ security.lastPasswordChange }}.
-          </p>
-
-          <button
-            @click="changePassword"
-            class="btn btn-outline border-base-content/10 hover:bg-base-content/5 text-base-content/90 rounded-xl px-8 font-bold capitalize"
-          >
-            {{ i18n.security.change }}
-          </button>
-        </section>
+       
 
         <!-- Admin Users Management -->
         <section
