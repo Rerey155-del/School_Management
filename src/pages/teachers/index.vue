@@ -86,8 +86,13 @@ const handleSubmit = async () => {
   }
 };
 
+const isStatusActive = (status: string | undefined) => {
+  if (!status) return false;
+  return status.toLowerCase() === 'active' || status.toLowerCase() === 'aktif';
+};
+
 const handleStatusToggle = async (id: number | string, currentStatus: string) => {
-  const newStatus = currentStatus === 'Active' ? 'Non-Aktif' : 'Active';
+  const newStatus = isStatusActive(currentStatus) ? 'Non-Aktif' : 'Active';
   try {
     await store.toggleItemStatus(id, 'status', newStatus);
   } catch (err: any) {
@@ -290,7 +295,7 @@ const prevPage = () => {
                 <td class="pr-12 py-10 text-right">
                   <div class="flex justify-end items-center gap-3">
                     <button
-                      @click="() => openEditForm(teacher.id!)"
+                      @click="() => openEditForm(teacher.id)"
                       class="btn btn-ghost btn-sm btn-circle text-base-content opacity-40 hover:opacity-100 transition-opacity"
                       title="Edit Teacher"
                     >
@@ -300,8 +305,8 @@ const prevPage = () => {
                     <input 
                       type="checkbox" 
                       class="toggle toggle-sm toggle-success" 
-                      :checked="teacher.status === 'Active'" 
-                      @change="handleStatusToggle(teacher.id!, teacher.status)"
+                      :checked="isStatusActive(teacher.status)" 
+                      @change="handleStatusToggle(teacher.id, teacher.status)"
                       title="Toggle Status"
                     />
                   </div>

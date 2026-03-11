@@ -72,8 +72,13 @@ const handleSubmit = async () => {
   }
 };
 
+const isStatusActive = (status: string | undefined) => {
+  if (!status) return false;
+  return status.toLowerCase() === 'active' || status.toLowerCase() === 'aktif';
+};
+
 const handleStatusToggle = async (id: number | string, currentStatus: string | undefined) => {
-  const newStatus = currentStatus === 'Active' ? 'Suspended' : 'Active';
+  const newStatus = isStatusActive(currentStatus) ? 'Suspended' : 'Active';
   try {
     await store.toggleItemStatus(id, 'status', newStatus);
   } catch (err: any) {
@@ -99,7 +104,6 @@ const i18n = {
     period: "Period / Duration",
     instructor: "Instructor",
     subject: "Subject",
-    status: "Status",
     actions: "Actions",
     noResults: "No results found for"
   },
@@ -219,7 +223,6 @@ const prevPage = () => {
                 <th class="py-8">{{ i18n.table.period }}</th>
                 <th class="py-8">{{ i18n.table.instructor }}</th>
                 <th class="py-8">{{ i18n.table.subject }}</th>
-                <th class="py-8 text-center">{{ i18n.table.status }}</th>
                 <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
@@ -246,34 +249,16 @@ const prevPage = () => {
                 <td class="py-10 font-bold text-lg text-[#6366f1]">
                   {{ sch.subject }}
                 </td>
-                <td class="py-10 text-center">
-                  <span
-                    :class="`badge badge-sm font-black uppercase text-[10px] p-2 h-auto ${
-                      (sch.status || 'Active') === 'Active'
-                        ? 'badge-success shadow-lg shadow-success/20'
-                        : 'badge-ghost opacity-40'
-                    }`"
-                  >
-                    {{ sch.status || 'Active' }}
-                  </span>
-                </td>
+               
                 <td class="pr-12 py-10 text-right">
                   <div class="flex justify-end items-center gap-3">
                     <button
-                      @click="() => openEditForm(sch.id!)"
+                      @click="() => openEditForm(sch.id)"
                       class="btn btn-ghost btn-sm btn-circle text-base-content opacity-40 hover:opacity-100 transition-opacity"
                       title="Edit Schedule"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </button>
-                    <!-- Status Toggle Switch -->
-                    <input 
-                      type="checkbox" 
-                      class="toggle toggle-sm toggle-success" 
-                      :checked="(sch.status || 'Active') === 'Active'" 
-                      @change="handleStatusToggle(sch.id!, sch.status || 'Active')"
-                      title="Toggle Status"
-                    />
                   </div>
                 </td>
               </tr>
