@@ -28,7 +28,9 @@ export const teacherService = {
     return response.data;
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    const response = await apiClient.patch(`/teachers/${id}`, { [statusField]: newValue });
-    return response.data;
+    const current = await this.getById(id);
+    const updated = { ...current, [statusField]: newValue };
+    const response = await apiClient.put(`/teachers/${id}`, updated);
+    return response.data || updated;
   }
 };

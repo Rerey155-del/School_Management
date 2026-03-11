@@ -37,7 +37,17 @@ export const studentService = {
     return response.data;
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    const response = await apiClient.patch(`/students/${id}`, { [statusField]: newValue });
-    return response.data;
+    // Backend doesn't support PATCH, so we fetch the item and PUT the full payload
+    const current = await this.getById(id);
+    const updated = { ...current, [statusField]: newValue };
+    const response = await apiClient.put(`/students/${id}`, updated);
+    
+    // Normalize response same as getAll/getById
+    const s = response.data || updated; // In case PUT doesn't return data
+    return {
+      ...s,
+      class_name: s.class_name || '-',
+      enrollment_status: s.enrollment_status || 'Active'
+    };
   }
 };

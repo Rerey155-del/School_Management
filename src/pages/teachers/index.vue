@@ -25,8 +25,8 @@ const isStatusActive = (status: string | undefined) => {
   return status.toLowerCase() === 'active' || status.toLowerCase() === 'aktif';
 };
 
-const handleStatusToggle = async (id: number | string, currentStatus: string) => {
-  const newStatus = isStatusActive(currentStatus) ? 'Non-Aktif' : 'Active';
+const handleStatusToggle = async (id: number | string, currentStatus: string | undefined) => {
+  const newStatus = isStatusActive(currentStatus) ? 'Non-Active' : 'Active';
   try {
     await store.toggleItemStatus(id, 'status', newStatus);
   } catch (err: any) {

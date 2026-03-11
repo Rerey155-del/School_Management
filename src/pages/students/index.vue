@@ -26,7 +26,7 @@ const isStatusActive = (status: string | undefined) => {
 };
 
 const handleStatusToggle = async (id: number | string, currentStatus: string | undefined) => {
-  const newStatus = isStatusActive(currentStatus) ? 'Non-Aktif' : 'Active';
+  const newStatus = isStatusActive(currentStatus) ? 'Non-Active' : 'Active';
   try {
     await store.toggleItemStatus(id, 'enrollment_status', newStatus);
   } catch (err: any) {

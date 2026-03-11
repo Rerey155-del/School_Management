@@ -29,7 +29,9 @@ export const scheduleService = {
     return response.data;
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    const response = await apiClient.patch(`/schedules/${id}`, { [statusField]: newValue });
-    return response.data;
+    const current = await this.getById(id);
+    const updated = { ...current, [statusField]: newValue };
+    const response = await apiClient.put(`/schedules/${id}`, updated);
+    return response.data || updated;
   }
 };

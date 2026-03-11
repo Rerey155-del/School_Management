@@ -32,8 +32,10 @@ export const subjectService = {
     return response.data;
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    const response = await apiClient.patch(`/subjects/${id}`, { [statusField]: newValue });
-    return response.data;
+    const current = await this.getById(id);
+    const updated = { ...current, [statusField]: newValue };
+    const response = await apiClient.put(`/subjects/${id}`, updated);
+    return response.data || updated;
   },
   async autocompleteSubjects(query: string): Promise<SubjectAutocompleteOption[]> {
     const data = await this.getAll();

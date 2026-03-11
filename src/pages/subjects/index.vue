@@ -26,7 +26,7 @@ const isStatusActive = (status: string | undefined) => {
 };
 
 const handleStatusToggle = async (id: number | string, currentStatus: string | undefined) => {
-  const newStatus = isStatusActive(currentStatus) ? 'Non-Aktif' : 'Active';
+  const newStatus = isStatusActive(currentStatus) ? 'Non-Active' : 'Active';
   try {
     await store.toggleItemStatus(id, 'status', newStatus);
   } catch (err: any) {
@@ -152,7 +152,7 @@ const prevPage = () => {
               <tr class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5">
                 <th class="pl-12 py-8">{{ i18n.table.name }}</th>
                 <th class="py-8">{{ i18n.table.code }}</th>
-                <th class="py-8">{{ i18n.table.metadata }}</th>
+                
                 <th class="py-8 text-center">{{ i18n.table.status }}</th>
                 <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
               </tr>
