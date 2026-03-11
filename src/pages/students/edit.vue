@@ -18,7 +18,6 @@ const form = ref({
   nis: "",
   gender: "Male",
   class_name: "",
-  enrollment_status: "Active"
 });
 
 // Autocomplete Logic
@@ -38,7 +37,6 @@ onMounted(async () => {
       nis: detail.nis, 
       gender: detail.gender, 
       class_name: detail.class_name, 
-      enrollment_status: detail.enrollment_status 
     };
   } else {
     router.push('/students');
@@ -144,13 +142,6 @@ const i18n = {
               inputClass="input input-bordered focus:border-secondary rounded-xl w-full"
               panelClass="bg-base-100 border shadow-xl rounded-xl mt-1 z-50 text-sm menu p-2"
             />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Enrollment Status</span></label>
-            <select v-model="form.enrollment_status" class="select select-bordered focus:border-secondary rounded-xl" required>
-              <option value="Active">Active</option>
-              <option value="Non-Active">Non-Active</option>
-            </select>
           </div>
           <div class="form-actions mt-6 flex justify-end gap-3">
             <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">Cancel</button>
