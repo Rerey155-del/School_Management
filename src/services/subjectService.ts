@@ -13,35 +13,47 @@ export interface SubjectType {
   status?: string; // Optional field for status changes
 }
 
+let mockSubjects: SubjectType[] = [
+  { id: 1, subject_name: "Mathematics", academic_code: "MAT101", metadata: ["Core", "Science"], status: "Active" },
+  { id: 2, subject_name: "English", academic_code: "ENG101", metadata: ["Core", "Language"], status: "Active" }
+];
+
 export const subjectService = {
   async autocompleteSubjects(query: string): Promise<SubjectAutocompleteOption[]> {
-    try {
-      if (!query || query.length < 3) return [];
-      const response = await apiClient.get(`/subjects/autocomplete`, { params: { search: query } });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching autocomplete subjects:', error);
-      return [];
-    }
+    await new Promise(r => setTimeout(r, 300));
+    if (!query || query.length < 3) return [];
+    return mockSubjects
+      .filter(s => s.subject_name.toLowerCase().includes(query.toLowerCase()))
+      .map(s => ({ id: s.id!, name: s.subject_name }));
   },
   async getAll(): Promise<SubjectType[]> {
-    const { data } = await apiClient.get('/subjects');
-    return Array.isArray(data) ? data : (data.data || []);
+    await new Promise(r => setTimeout(r, 500));
+    return [...mockSubjects];
   },
   async getById(id: number | string): Promise<SubjectType> {
-    const { data } = await apiClient.get(`/subjects/${id}`);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const found = mockSubjects.find(t => String(t.id) === String(id));
+    if (!found) throw new Error("Subject not found");
+    return { ...found };
   },
   async create(payload: Omit<SubjectType, 'id'>) {
-    const { data } = await apiClient.post('/subjects', payload);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const newItem = { ...payload, id: Date.now() };
+    mockSubjects.push(newItem);
+    return { ...newItem };
   },
   async update(id: number | string, payload: Partial<SubjectType>) {
-    const { data } = await apiClient.put(`/subjects/${id}`, payload);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const index = mockSubjects.findIndex(t => String(t.id) === String(id));
+    if (index === -1) throw new Error("Subject not found");
+    mockSubjects[index] = { ...mockSubjects[index], ...payload } as SubjectType;
+    return { ...mockSubjects[index] };
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    const { data } = await apiClient.put(`/subjects/${id}`, { [statusField]: newValue });
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const index = mockSubjects.findIndex(t => String(t.id) === String(id));
+    if (index === -1) throw new Error("Subject not found");
+    (mockSubjects[index] as any)[statusField] = newValue;
+    return { ...mockSubjects[index] };
   }
 };

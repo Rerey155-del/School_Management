@@ -10,25 +10,40 @@ export interface ScheduleType {
   status?: string;
 }
 
+let mockSchedules: ScheduleType[] = [
+  { id: 1, class_name: "Class 10A", day: "Monday", period_duration: "08:00 - 09:30", instructor: "Budi Santoso", subject: "Mathematics", status: "Active" },
+  { id: 2, class_name: "Class 10B", day: "Tuesday", period_duration: "10:00 - 11:30", instructor: "Siti Aminah", subject: "Science", status: "Active" }
+];
+
 export const scheduleService = {
   async getAll(): Promise<ScheduleType[]> {
-    const { data } = await apiClient.get('/schedules');
-    return Array.isArray(data) ? data : (data.data || []);
+    await new Promise(r => setTimeout(r, 500));
+    return [...mockSchedules];
   },
   async getById(id: number | string): Promise<ScheduleType> {
-    const { data } = await apiClient.get(`/schedules/${id}`);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const found = mockSchedules.find(t => String(t.id) === String(id));
+    if (!found) throw new Error("Schedule not found");
+    return { ...found };
   },
   async create(payload: Omit<ScheduleType, 'id'>) {
-    const { data } = await apiClient.post('/schedules', payload);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const newItem = { ...payload, id: Date.now() };
+    mockSchedules.push(newItem);
+    return { ...newItem };
   },
   async update(id: number | string, payload: Partial<ScheduleType>) {
-    const { data } = await apiClient.put(`/schedules/${id}`, payload);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const index = mockSchedules.findIndex(t => String(t.id) === String(id));
+    if (index === -1) throw new Error("Schedule not found");
+    mockSchedules[index] = { ...mockSchedules[index], ...payload } as ScheduleType;
+    return { ...mockSchedules[index] };
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    const { data } = await apiClient.put(`/schedules/${id}`, { [statusField]: newValue });
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const index = mockSchedules.findIndex(t => String(t.id) === String(id));
+    if (index === -1) throw new Error("Schedule not found");
+    (mockSchedules[index] as any)[statusField] = newValue;
+    return { ...mockSchedules[index] };
   }
 };

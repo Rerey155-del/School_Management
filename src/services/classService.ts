@@ -13,35 +13,47 @@ export interface ClassType {
   status?: string;
 }
 
+let mockClasses: ClassType[] = [
+  { id: 1, class_designation: "Class 10A", room_id: "RM-101", utilization: "30/40", status: "Active" },
+  { id: 2, class_designation: "Class 10B", room_id: "RM-102", utilization: "32/40", status: "Active" }
+];
+
 export const classService = {
   async autocompleteClasses(query: string): Promise<ClassAutocompleteOption[]> {
-    try {
-      if (!query || query.length < 3) return [];
-      const response = await apiClient.get(`/classes/autocomplete`, { params: { search: query } });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching autocomplete classes:', error);
-      return [];
-    }
+    await new Promise(r => setTimeout(r, 300));
+    if (!query || query.length < 3) return [];
+    return mockClasses
+      .filter(c => c.class_designation.toLowerCase().includes(query.toLowerCase()))
+      .map(c => ({ id: c.id!, name: c.class_designation }));
   },
   async getAll(): Promise<ClassType[]> {
-    const { data } = await apiClient.get('/classes');
-    return Array.isArray(data) ? data : (data.data || []);
+    await new Promise(r => setTimeout(r, 500));
+    return [...mockClasses];
   },
   async getById(id: number | string): Promise<ClassType> {
-    const { data } = await apiClient.get(`/classes/${id}`);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const found = mockClasses.find(t => String(t.id) === String(id));
+    if (!found) throw new Error("Class not found");
+    return { ...found };
   },
   async create(payload: Omit<ClassType, 'id'>) {
-    const { data } = await apiClient.post('/classes', payload);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const newItem = { ...payload, id: Date.now() };
+    mockClasses.push(newItem);
+    return { ...newItem };
   },
   async update(id: number | string, payload: Partial<ClassType>) {
-    const { data } = await apiClient.put(`/classes/${id}`, payload);
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const index = mockClasses.findIndex(t => String(t.id) === String(id));
+    if (index === -1) throw new Error("Class not found");
+    mockClasses[index] = { ...mockClasses[index], ...payload } as ClassType;
+    return { ...mockClasses[index] };
   },
   async updateStatus(id: number | string, statusField: string, newValue: any) {
-    const { data } = await apiClient.put(`/classes/${id}`, { [statusField]: newValue });
-    return data;
+    await new Promise(r => setTimeout(r, 500));
+    const index = mockClasses.findIndex(t => String(t.id) === String(id));
+    if (index === -1) throw new Error("Class not found");
+    (mockClasses[index] as any)[statusField] = newValue;
+    return { ...mockClasses[index] };
   }
 };
