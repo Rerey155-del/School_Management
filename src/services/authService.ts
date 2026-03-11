@@ -2,11 +2,14 @@ import apiClient from './apiClient';
 
 export interface UserType {
   id?: number | string;
+  full_name?: string;
   username: string;
   email?: string;
   role?: string;
   avatar?: string;
-  name?: string;
+  status?: string;
+  last_login?: string | null;
+  created_at?: string;
 }
 
 export const authService = {
