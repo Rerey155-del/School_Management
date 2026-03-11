@@ -200,12 +200,23 @@ const prevPage = () => {
                 <td class="pr-12 py-10 text-right">
                   <div class="flex justify-end items-center gap-3">
                     <button
-                      @click="() => openEditForm(student.id)"
+                      @click="() => openEditForm(student.id!)"
                       class="btn btn-ghost btn-sm btn-circle text-base-content opacity-40 hover:opacity-100 transition-opacity"
                       title="Edit Student"
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </button>
+<<<<<<< Updated upstream
+=======
+                    <!-- Status Toggle Switch -->
+                    <input 
+                      type="checkbox" 
+                      class="toggle toggle-sm toggle-success" 
+                      :checked="isStatusActive(student.enrollment_status)" 
+                      @change="handleStatusToggle(student.id!, student.enrollment_status)"
+                      title="Toggle Enrollment Status"
+                    />
+>>>>>>> Stashed changes
                   </div>
                 </td>
               </tr>

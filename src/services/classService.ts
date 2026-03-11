@@ -39,6 +39,10 @@ export const classService = {
     const data = await this.getAll();
     return data
       .filter(c => c.class_designation.toLowerCase().includes(query.toLowerCase()))
+<<<<<<< Updated upstream
       .map(c => ({ id: c.id as string | number, name: c.class_designation }));
+=======
+      .map(c => ({ id: c.id!, name: c.class_designation }));
+>>>>>>> Stashed changes
   }
 };

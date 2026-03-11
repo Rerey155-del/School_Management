@@ -39,6 +39,10 @@ export const subjectService = {
     const data = await this.getAll();
     return data
       .filter(s => s.subject_name.toLowerCase().includes(query.toLowerCase()))
+<<<<<<< Updated upstream
       .map(s => ({ id: s.id as string | number, name: s.subject_name }));
+=======
+      .map(s => ({ id: s.id!, name: s.subject_name }));
+>>>>>>> Stashed changes
   }
 };
