@@ -26,8 +26,8 @@ onMounted(async () => {
   if (detail) {
     form.value = { 
       id: detail.id as string | number, 
-      subject_name: detail.subject_name, 
-      academic_code: detail.academic_code, 
+      subject_name: detail.subject_name || "", 
+      academic_code: detail.academic_code || "", 
       metadata: Array.isArray(detail.metadata) ? detail.metadata : [],
       status: detail.status || 'Active'
     };
