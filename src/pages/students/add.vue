@@ -118,8 +118,8 @@ const i18n = {
           <div class="form-control">
             <label class="label"><span class="label-text font-bold">Enrollment Status</span></label>
             <select v-model="form.enrollment_status" class="select select-bordered focus:border-secondary rounded-xl" required>
-              <option value="Active">Aktif</option>
-              <option value="Non-Aktif">Tidak Aktif</option>
+              <option value="Active">Active</option>
+              <option value="Non-Active">Non-Active</option>
             </select>
           </div>
           <div class="form-actions mt-6 flex justify-end gap-3">
