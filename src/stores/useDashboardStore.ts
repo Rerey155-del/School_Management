@@ -3,6 +3,8 @@ import { useTeacherStore } from './useTeacherStore';
 import { useStudentStore } from './useStudentStore';
 import { useClassStore } from './useClassStore';
 import { useSubjectStore } from './useSubjectStore';
+import { useScheduleStore } from './useScheduleStore';
+import { useAuthStore } from './useAuthStore';
 
 /**
  * Interface representing the state of the dashboard store.
@@ -16,6 +18,8 @@ interface DashboardState {
   stats: any[];
   /** List of upcoming academic events */
   academicEvents: any[];
+  /** Breakdown of school summary data */
+  schoolSummary: { totalAdmins: number; activeTeachers: number; avgStudentsPerClass: number };
   /** List of recent system audit logs */
   auditLogs: any[];
   /** Aggregated active vs inactive teacher status data */
@@ -36,6 +40,7 @@ export const useDashboardStore = defineStore('dashboard', {
     locale: 'id',
     stats: [],
     academicEvents: [],
+    schoolSummary: { totalAdmins: 0, activeTeachers: 0, avgStudentsPerClass: 0 },
     auditLogs: [],
     teacherStatus: { active: 0, inactive: 0, total: 0 },
     chartData: null,
@@ -54,6 +59,8 @@ export const useDashboardStore = defineStore('dashboard', {
       const studentStore = useStudentStore();
       const classStore = useClassStore();
       const subjectStore = useSubjectStore();
+      const scheduleStore = useScheduleStore();
+      const authStore = useAuthStore();
 
       try {
         // Fetch all base data from real API via their respective stores
@@ -61,7 +68,8 @@ export const useDashboardStore = defineStore('dashboard', {
           teacherStore.fetchList(),
           studentStore.fetchList(),
           classStore.fetchList(),
-          subjectStore.fetchList()
+          subjectStore.fetchList(),
+          scheduleStore.fetchList()
         ]);
 
         // Transform store counts into statistics objects
@@ -81,13 +89,26 @@ export const useDashboardStore = defineStore('dashboard', {
           total: totalTeachers
         };
 
-        // Mock events (These could also be moved to a separate service in the future)
-        this.academicEvents = [
-          { id: 1, title: 'Mid-term Exams Preparation', date: 'Oct 15 - Oct 22', type: 'Exam', color: 'primary' },
-          { id: 2, title: 'Parent-Teacher Meeting', date: 'Oct 25, 09:00 AM', type: 'Meeting', color: 'secondary' },
-          { id: 3, title: 'Inter-school Sport Day', date: 'Nov 02', type: 'Event', color: 'accent' },
-          { id: 4, title: 'Science Fair Submission', date: 'Nov 05', type: 'Deadline', color: 'error' }
-        ];
+        // School data summary aggregation
+        this.schoolSummary = {
+          totalAdmins: 1, // Assume 1 admin per initial mock layout instructions
+          activeTeachers: activeCount,
+          avgStudentsPerClass: classStore.items.length > 0 
+            ? Math.round(studentStore.items.length / classStore.items.length) 
+            : 0
+        };
+
+        // Real events from schedules
+        const colors = ['primary', 'secondary', 'accent', 'info', 'warning'];
+        this.academicEvents = scheduleStore.items
+          .slice(0, 3)
+          .map((sch, index) => ({
+            id: sch.id,
+            title: `${sch.subject} - ${sch.class_name}`,
+            date: `${sch.day}, ${sch.period_duration}`,
+            type: 'Class',
+            color: colors[index % colors.length]
+        }));
 
         // Mock Audit Logs
         this.auditLogs = [

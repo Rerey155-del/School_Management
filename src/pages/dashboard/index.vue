@@ -3,7 +3,6 @@ import { onMounted, computed } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import { useDashboardStore } from "@/stores/useDashboardStore";
 import Skeleton from "primevue/skeleton";
-import Chart from "primevue/chart";
 
 const store = useDashboardStore();
 
@@ -38,7 +37,13 @@ const i18n = computed(() => {
       userStatus: isId ? "Status Pengguna (Guru)" : "User Status (Teachers)",
       auditLogs: isId ? "Aktivitas Terbaru" : "Recent Activities",
       activeText: isId ? "Aktif" : "Active",
-      inactiveText: isId ? "Non-Aktif" : "Inactive"
+      inactiveText: isId ? "Non-Aktif" : "Inactive",
+      schoolData: {
+        title: isId ? "Ringkasan Data Sekolah" : "School Data Summary",
+        totalAdmins: isId ? "Total Admin" : "Total Admins",
+        activeTeachers: isId ? "Total Guru Aktif" : "Total Active Teachers",
+        avgStudents: isId ? "Rata-rata Siswa per Kelas" : "Average Students / Class"
+      }
     }
   };
 });
@@ -80,12 +85,6 @@ const i18n = computed(() => {
         <div
           class="flex items-center gap-3 bg-base-100 p-2 rounded-2xl shadow-sm border border-base-200"
         >
-          <!-- Quick Action Buttons -->
-          <div class="hidden lg:flex gap-2 mr-2 border-r border-base-200 pr-4">
-             <router-link to="/teachers/add" class="btn btn-sm btn-primary rounded-xl text-xs">{{ i18n.actions.addTeacher }}</router-link>
-             <router-link to="/students/add" class="btn btn-sm btn-secondary rounded-xl text-xs">{{ i18n.actions.addStudent }}</router-link>
-          </div>
-          
           <!-- Global Language Switcher -->
           <div class="flex items-center gap-2 mr-2 border-r border-base-200 pr-4">
             <span class="text-xs font-bold font-mono" :class="store.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
@@ -187,30 +186,63 @@ const i18n = computed(() => {
       </div>
 
       <!-- Main Content Area -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
         
-        <!-- Graphic / Chart Area & User Status -->
-        <div class="lg:col-span-2 flex flex-col gap-6">
+        <!-- School Data Summary & User Status -->
+        <div class="flex flex-col gap-6">
           <div 
             class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200" 
             data-aos="fade-right"
             data-aos-delay="200"
           >
-            <h3 class="text-xl font-extrabold tracking-tight mb-8">{{ i18n.widgets.performance }}</h3>
+            <h3 class="text-xl font-extrabold tracking-tight mb-8">{{ i18n.widgets.schoolData.title }}</h3>
             
             <template v-if="store.isLoading">
                <div class="flex flex-col gap-4">
-                  <Skeleton width="100%" height="300px" borderRadius="1rem" />
+                  <Skeleton width="100%" height="4rem" borderRadius="1rem" />
+                  <Skeleton width="100%" height="4rem" borderRadius="1rem" />
+                  <Skeleton width="100%" height="4rem" borderRadius="1rem" />
                </div>
             </template>
             
             <template v-else>
-               <Chart type="line" :data="store.chartData" :options="store.chartOptions" class="h-[300px] w-full" />
+               <div class="flex flex-col gap-4">
+                  <!-- Total Admins -->
+                  <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl border border-base-200">
+                    <div class="flex items-center gap-4">
+                      <div class="w-10 h-10 rounded-xl bg-info/10 text-info flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-lg"></i>
+                      </div>
+                      <span class="font-bold text-base-content/80">{{ i18n.widgets.schoolData.totalAdmins }}</span>
+                    </div>
+                    <span class="text-xl font-black text-info">{{ store.schoolSummary.totalAdmins }}</span>
+                  </div>
+                  <!-- Active Teachers -->
+                  <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl border border-base-200">
+                    <div class="flex items-center gap-4">
+                      <div class="w-10 h-10 rounded-xl bg-success/10 text-success flex items-center justify-center">
+                        <i class="fas fa-chalkboard-teacher text-lg"></i>
+                      </div>
+                      <span class="font-bold text-base-content/80">{{ i18n.widgets.schoolData.activeTeachers }}</span>
+                    </div>
+                    <span class="text-xl font-black text-success">{{ store.schoolSummary.activeTeachers }}</span>
+                  </div>
+                  <!-- Avg Students/Class -->
+                  <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl border border-base-200">
+                    <div class="flex items-center gap-4">
+                      <div class="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
+                        <i class="fas fa-users text-lg"></i>
+                      </div>
+                      <span class="font-bold text-base-content/80">{{ i18n.widgets.schoolData.avgStudents }}</span>
+                    </div>
+                    <span class="text-xl font-black text-accent">{{ store.schoolSummary.avgStudentsPerClass }}</span>
+                  </div>
+               </div>
             </template>
           </div>
 
           <!-- User Status Widget -->
-          <div class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200" data-aos="fade-up">
+          <div class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200 flex-1" data-aos="fade-up">
             <h3 class="text-xl font-extrabold tracking-tight mb-6">{{ i18n.widgets.userStatus }}</h3>
             <template v-if="store.isLoading">
               <Skeleton width="100%" height="2rem" borderRadius="1rem" class="mb-4" />
@@ -238,11 +270,10 @@ const i18n = computed(() => {
           </div>
         </div>
 
-        <!-- Academic Events & Audit Logs Area -->
+        <!-- Academic Events Area -->
         <div class="flex flex-col gap-6">
-          <!-- Upcoming Events -->
           <div 
-            class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200" 
+            class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200 h-full" 
             data-aos="fade-left"
             data-aos-delay="300"
           >
@@ -272,9 +303,13 @@ const i18n = computed(() => {
                </div>
             </template>
           </div>
+        </div>
 
-          <!-- Audit Log (Recent Activities) -->
-          <div class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200 flex-1" data-aos="fade-left" data-aos-delay="400">
+      </div>
+
+      <!-- Audit Log (Recent Activities) Full Width -->
+      <div class="grid grid-cols-1 mb-10">
+          <div class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200" data-aos="fade-up" data-aos-delay="400">
              <h3 class="text-xl font-extrabold tracking-tight mb-6">{{ i18n.widgets.auditLogs }}</h3>
              <template v-if="store.isLoading">
                <div class="flex flex-col gap-4">
@@ -283,32 +318,33 @@ const i18n = computed(() => {
              </template>
              <template v-else>
                <div class="flex flex-col gap-3">
-                 <div v-for="log in store.auditLogs" :key="log.id" class="flex gap-3 items-start p-3 rounded-xl hover:bg-base-200/50 transition-colors">
+                 <div v-for="log in store.auditLogs" :key="log.id" class="flex gap-4 items-center p-4 rounded-xl hover:bg-base-200/50 border border-transparent hover:border-base-200 transition-colors">
                     <div :class="[
-                      'w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1',
+                      'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
                       log.action === 'CREATE' ? 'bg-success/20 text-success' :
                       log.action === 'UPDATE' ? 'bg-info/20 text-info' :
                       'bg-error/20 text-error'
                     ]">
                       <i :class="[
-                        'fas text-xs',
+                        'fas text-sm',
                         log.action === 'CREATE' ? 'fa-plus' :
                         log.action === 'UPDATE' ? 'fa-pen' :
                         'fa-trash'
                       ]"></i>
                     </div>
-                    <div>
-                       <p class="text-sm font-bold text-base-content">{{ log.entity }} {{ log.action }}</p>
-                       <p class="text-xs text-base-content/60">{{ log.details }}</p>
-                       <p class="text-[10px] text-base-content/40 mt-1 font-mono">{{ new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}</p>
+                    <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2">
+                       <div>
+                         <p class="text-sm font-bold text-base-content">{{ log.entity }} {{ log.action }}</p>
+                         <p class="text-xs text-base-content/60">{{ log.details }}</p>
+                       </div>
+                       <div class="text-xs text-base-content/40 font-mono font-bold bg-base-200 px-3 py-1.5 rounded-lg w-fit">
+                         {{ new Date(log.timestamp).toLocaleDateString() }} - {{ new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}
+                       </div>
                     </div>
                  </div>
                </div>
              </template>
           </div>
-
-        </div>
-
       </div>
     </div>
 
