@@ -303,7 +303,7 @@ const prevPage = () => {
     </div>
 
     <!-- Add Modal -->
-    <dialog class="modal font-sans" :class="{ 'modal-open': isAddModalOpen }">
+    <dialog v-if="isAddModalOpen" class="modal font-sans" :class="{ 'modal-open': isAddModalOpen }">
       <div class="modal-box rounded-[2rem] p-8 shadow-2xl bg-base-100 border border-base-content/5 overflow-visible">
         <h3 class="font-extrabold text-2xl mb-6">Register New Student</h3>
         <form @submit.prevent="handleAddStudent" class="flex flex-col gap-4">
@@ -359,7 +359,7 @@ const prevPage = () => {
     </dialog>
 
     <!-- Edit Modal -->
-    <dialog class="modal font-sans" :class="{ 'modal-open': isEditModalOpen }">
+    <dialog v-if="isEditModalOpen" class="modal font-sans" :class="{ 'modal-open': isEditModalOpen }">
       <div class="modal-box rounded-[2rem] p-8 shadow-2xl bg-base-100 border border-base-content/5">
         <h3 class="font-extrabold text-2xl mb-6">Edit Student Data</h3>
         <form @submit.prevent="handleUpdate" class="flex flex-col gap-4">

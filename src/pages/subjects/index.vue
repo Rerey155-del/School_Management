@@ -238,7 +238,7 @@ const prevPage = () => {
     </div>
 
     <!-- Edit Modal -->
-    <dialog class="modal font-sans" :class="{ 'modal-open': isEditModalOpen }">
+    <dialog v-if="isEditModalOpen" class="modal font-sans" :class="{ 'modal-open': isEditModalOpen }">
       <div class="modal-box rounded-[2rem] p-8 shadow-2xl bg-base-100 border border-base-content/5">
         <h3 class="font-extrabold text-2xl mb-6">Edit Subject Data</h3>
         <form @submit.prevent="handleUpdate" class="flex flex-col gap-4">
