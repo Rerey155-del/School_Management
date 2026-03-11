@@ -19,5 +19,16 @@ export function useTeachers() {
     { id: 15, name: "Margaret Martin, M.Si", nip: "198502142014052015", email: "margaret.martin@school.v3", department: "Geography", status: "Active" }
   ]);
 
-  return { teachers }
+  const searchTeachers = async (query: string): Promise<string[]> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    if (!query) return teachers.value.map(t => t.name).slice(0, 10);
+    
+    return teachers.value
+      .filter(t => t.name.toLowerCase().includes(query.toLowerCase()))
+      .map(t => t.name);
+  };
+
+  return { teachers, searchTeachers }
 }

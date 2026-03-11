@@ -19,5 +19,16 @@ export function useSubjects() {
     { id: 15, name: "Philosophy 101", code: "PHIL-GEN-555", tags: ["Ethics", "Core"] }
   ]);
 
-  return { subjects }
+  const searchSubjects = async (query: string): Promise<string[]> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    if (!query) return subjects.value.map(s => s.name).slice(0, 10);
+    
+    return subjects.value
+      .filter(s => s.name.toLowerCase().includes(query.toLowerCase()))
+      .map(s => s.name);
+  };
+
+  return { subjects, searchSubjects }
 }
