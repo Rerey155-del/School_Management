@@ -3,100 +3,21 @@ import Sidebar from "@/components/Sidebar.vue";
 import { Icon } from "@iconify/vue";
 import { useStudentStore } from "@/stores/useStudentStore";
 import { ref, computed, onMounted } from "vue";
-import { classService, type ClassAutocompleteOption } from "@/services/classService";
-import AutoComplete from "primevue/autocomplete";
+import { useRouter } from "vue-router";
 
 const store = useStudentStore();
+const router = useRouter();
 
 onMounted(() => {
   store.fetchList();
 });
 
-const currentView = ref<'list' | 'form'>('list');
-const isEditMode = ref(false);
-const isSubmitting = ref(false);
-
-const form = ref({
-  id: '' as string | number,
-  name: "",
-  nis: "",
-  gender: "Male",
-  class_name: "",
-  enrollment_status: "Active"
-});
-
-// Autocomplete Logic
-const filteredClasses = ref<ClassAutocompleteOption[]>([]);
-const searchClass = async (event: any) => {
-  const query = event.query;
-  filteredClasses.value = await classService.autocompleteClasses(query);
-};
-
 const openAddForm = () => {
-  isEditMode.value = false;
-  form.value = { id: '', name: "", nis: "", gender: "Male", class_name: "", enrollment_status: "Active" };
-  currentView.value = 'form';
+  router.push('/students/add');
 };
 
-const openEditForm = async (id: number | string) => {
-  isEditMode.value = true;
-  currentView.value = 'form';
-  const detail = await store.fetchDetail(id);
-  if (detail) {
-    form.value = { 
-      id: detail.id as string | number, 
-      name: detail.name, 
-      nis: detail.nis, 
-      gender: detail.gender, 
-      class_name: detail.class_name, 
-      enrollment_status: detail.enrollment_status 
-    };
-  }
-};
-
-const goBack = () => {
-  currentView.value = 'list';
-};
-
-const handleSubmit = async () => {
-  try {
-    isSubmitting.value = true;
-    const finalPayload = {
-      ...form.value,
-      class_name: typeof form.value.class_name === 'object' 
-          ? (form.value.class_name as any).name 
-          : form.value.class_name
-    };
-
-    if (isEditMode.value) {
-      const { id, ...putPayload } = finalPayload;
-      await store.updateItem(id, putPayload);
-    } else {
-      const { id, ...postPayload } = finalPayload;
-      await store.createItem(postPayload);
-    }
-    
-    await store.fetchList();
-    goBack();
-  } catch (error: any) {
-    alert(error.message || 'An error occurred');
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
-const isStatusActive = (status: string | undefined) => {
-  if (!status) return false;
-  return status.toLowerCase() === 'active' || status.toLowerCase() === 'aktif';
-};
-
-const handleStatusToggle = async (id: number | string, currentStatus: string) => {
-  const newStatus = isStatusActive(currentStatus) ? 'Suspended' : 'Active';
-  try {
-    await store.toggleItemStatus(id, 'enrollment_status', newStatus);
-  } catch (err: any) {
-    alert('Failed to toggle status: ' + (err.message || ''));
-  }
+const openEditForm = (id: number | string) => {
+  router.push(`/students/edit/${id}`);
 };
 
 const i18n = {
@@ -180,50 +101,40 @@ const prevPage = () => {
       >
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
-            {{ currentView === 'list' ? i18n.header.title : (isEditMode ? 'Edit Student' : 'Register Student') }}
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/40 font-medium">
-            {{ currentView === 'list' ? i18n.header.subtitle : 'Fill out the form below.' }}
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div class="flex items-center gap-3">
-          <template v-if="currentView === 'list'">
-            <!-- Search Bar -->
-            <div class="relative group">
-              <Icon
-                icon="lucide:search"
-                class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors"
-              />
-              <input
-                v-model="searchQuery"
-                @input="currentPage = 1"
-                type="text"
-                :placeholder="i18n.actions.search"
-                class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
-              />
-            </div>
-            <button
-              @click="openAddForm"
-              class="btn btn-secondary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-secondary/20 capitalize"
-            >
-              <Icon icon="lucide:user-plus" class="text-sm" />
-              {{ i18n.actions.register }}
-            </button>
-          </template>
-          <template v-else>
-            <button
-              @click="goBack"
-              class="btn btn-ghost rounded-xl px-6 font-bold gap-2 capitalize"
-            >
-              <Icon icon="lucide:arrow-left" class="text-sm" />
-              {{ i18n.actions.back }}
-            </button>
-          </template>
+          <!-- Search Bar -->
+          <div class="relative group">
+            <Icon
+              icon="lucide:search"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors"
+            />
+            <input
+              v-model="searchQuery"
+              @input="currentPage = 1"
+              type="text"
+              :placeholder="i18n.actions.search"
+              class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
+            />
+          </div>
+          <button
+            @click="openAddForm"
+            class="btn btn-secondary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-secondary/20 capitalize"
+          >
+            <Icon icon="lucide:user-plus" class="text-sm" />
+            {{ i18n.actions.register }}
+          </button>
         </div>
       </header>
 
       <!-- Main Content Area -->
-      <div v-if="currentView === 'list'"
+      <div
+
         class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] overflow-hidden flex flex-col"
         data-aos="fade-right"
         data-aos-delay="200"
@@ -295,14 +206,6 @@ const prevPage = () => {
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </button>
-                    <!-- Status Toggle Switch -->
-                    <input 
-                      type="checkbox" 
-                      class="toggle toggle-sm toggle-success" 
-                      :checked="isStatusActive(student.enrollment_status)" 
-                      @change="handleStatusToggle(student.id, student.enrollment_status)"
-                      title="Toggle Enrollment Status"
-                    />
                   </div>
                 </td>
               </tr>
@@ -350,69 +253,6 @@ const prevPage = () => {
         </div>
       </div>
 
-      <!-- In-Page Form View -->
-      <div v-else-if="currentView === 'form'"
-        class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] p-8 max-w-3xl"
-        data-aos="fade-up"
-      >
-        <!-- Skeleton Loader for Edit Flow -->
-        <div v-if="store.loadingDetail" class="animate-pulse space-y-6">
-          <div class="h-10 bg-base-200 rounded w-1/4"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-1/2"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full mt-8"></div>
-        </div>
-        
-        <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Name</span></label>
-            <input v-model="form.name" type="text" class="input input-bordered focus:border-secondary rounded-xl" required placeholder="Jane Doe" />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">NIS</span></label>
-            <input v-model="form.nis" type="text" class="input input-bordered focus:border-secondary rounded-xl" required placeholder="12345678" />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Gender</span></label>
-            <select v-model="form.gender" class="select select-bordered focus:border-secondary rounded-xl" required>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
-          <div class="form-control flex flex-col pt-1">
-            <label class="label"><span class="label-text font-bold">Class Name</span></label>
-            <AutoComplete 
-              v-model="form.class_name" 
-              :suggestions="filteredClasses" 
-              @complete="searchClass" 
-              optionLabel="name" 
-              placeholder="Search Class (min. 3 chars)"
-              :delay="300"
-              class="w-full"
-              inputClass="input input-bordered focus:border-secondary rounded-xl w-full"
-              panelClass="bg-base-100 border shadow-xl rounded-xl mt-1 z-50 text-sm menu p-2"
-            />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Enrollment Status</span></label>
-            <select v-model="form.enrollment_status" class="select select-bordered focus:border-secondary rounded-xl" required>
-              <option value="Active">Active</option>
-              <option value="Suspended">Suspended</option>
-              <option value="Graduated">Graduated</option>
-            </select>
-          </div>
-          <div class="form-actions mt-6 flex justify-end gap-3">
-            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">Cancel</button>
-            <button type="submit" class="btn btn-secondary rounded-xl font-bold px-8 shadow-lg shadow-secondary/20" :disabled="isSubmitting">
-              <span v-if="isSubmitting" class="loading loading-spinner loading-sm"></span>
-              {{ isEditMode ? 'Save Updates' : 'Register Student' }}
-            </button>
-          </div>
-        </form>
-      </div>
 
     </div>
     <Sidebar />

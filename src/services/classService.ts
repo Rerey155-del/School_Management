@@ -34,5 +34,11 @@ export const classService = {
   async updateStatus(id: number | string, statusField: string, newValue: any) {
     const response = await apiClient.patch(`/classes/${id}`, { [statusField]: newValue });
     return response.data;
+  },
+  async autocompleteClasses(query: string): Promise<ClassAutocompleteOption[]> {
+    const data = await this.getAll();
+    return data
+      .filter(c => c.class_designation.toLowerCase().includes(query.toLowerCase()))
+      .map(c => ({ id: c.id as string | number, name: c.class_designation }));
   }
 };

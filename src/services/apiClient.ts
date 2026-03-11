@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Konfigurasi instance Axios untuk base URL API
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api', // Ganti dengan URL backend sesungguhnya di .env
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Ganti dengan URL backend sesungguhnya di .env
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

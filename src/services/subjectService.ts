@@ -34,5 +34,11 @@ export const subjectService = {
   async updateStatus(id: number | string, statusField: string, newValue: any) {
     const response = await apiClient.patch(`/subjects/${id}`, { [statusField]: newValue });
     return response.data;
+  },
+  async autocompleteSubjects(query: string): Promise<SubjectAutocompleteOption[]> {
+    const data = await this.getAll();
+    return data
+      .filter(s => s.subject_name.toLowerCase().includes(query.toLowerCase()))
+      .map(s => ({ id: s.id as string | number, name: s.subject_name }));
   }
 };

@@ -27,10 +27,34 @@ const routes = [
         meta: { requiresAuth: true, title: 'Teachers List' }
     },
     {
+        path: '/teachers/add',
+        name : 'teachers-add',
+        component: () => import('@/pages/teachers/add.vue'),
+        meta: { requiresAuth: true, title: 'Add Teacher' }
+    },
+    {
+        path: '/teachers/edit/:id',
+        name : 'teachers-edit',
+        component: () => import('@/pages/teachers/edit.vue'),
+        meta: { requiresAuth: true, title: 'Edit Teacher' }
+    },
+    {
         path: '/students',
         name : 'students',
         component: () => import('@/pages/students/index.vue'),
         meta: { requiresAuth: true, title: 'Students List' }
+    },
+    {
+        path: '/students/add',
+        name : 'students-add',
+        component: () => import('@/pages/students/add.vue'),
+        meta: { requiresAuth: true, title: 'Add Student' }
+    },
+    {
+        path: '/students/edit/:id',
+        name : 'students-edit',
+        component: () => import('@/pages/students/edit.vue'),
+        meta: { requiresAuth: true, title: 'Edit Student' }
     },
     {
         path: '/subjects',
@@ -39,16 +63,52 @@ const routes = [
         meta: { requiresAuth: true, title: 'Subjects List' }
     },
     {
+        path: '/subjects/add',
+        name : 'subjects-add',
+        component: () => import('@/pages/subjects/add.vue'),
+        meta: { requiresAuth: true, title: 'Add Subject' }
+    },
+    {
+        path: '/subjects/edit/:id',
+        name : 'subjects-edit',
+        component: () => import('@/pages/subjects/edit.vue'),
+        meta: { requiresAuth: true, title: 'Edit Subject' }
+    },
+    {
         path: '/classes',
         name : 'classes',
         component: () => import('@/pages/classes/index.vue'),
         meta: { requiresAuth: true, title: 'Classes List' }
     },
     {
+        path: '/classes/add',
+        name : 'classes-add',
+        component: () => import('@/pages/classes/add.vue'),
+        meta: { requiresAuth: true, title: 'Add Class' }
+    },
+    {
+        path: '/classes/edit/:id',
+        name : 'classes-edit',
+        component: () => import('@/pages/classes/edit.vue'),
+        meta: { requiresAuth: true, title: 'Edit Class' }
+    },
+    {
         path: '/schedules',
         name : 'schedules',
         component: () => import('@/pages/schedules/index.vue'),
         meta: { requiresAuth: true, title: 'Schedules List' }
+    },
+    {
+        path: '/schedules/add',
+        name : 'schedules-add',
+        component: () => import('@/pages/schedules/add.vue'),
+        meta: { requiresAuth: true, title: 'Add Schedule' }
+    },
+    {
+        path: '/schedules/edit/:id',
+        name : 'schedules-edit',
+        component: () => import('@/pages/schedules/edit.vue'),
+        meta: { requiresAuth: true, title: 'Edit Schedule' }
     }
 ]
 

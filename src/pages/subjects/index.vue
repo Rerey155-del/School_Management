@@ -3,90 +3,21 @@ import Sidebar from "@/components/Sidebar.vue";
 import { Icon } from "@iconify/vue";
 import { useSubjectStore } from "@/stores/useSubjectStore";
 import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 const store = useSubjectStore();
+const router = useRouter();
 
 onMounted(() => {
   store.fetchList();
 });
 
-const currentView = ref<'list' | 'form'>('list');
-const isEditMode = ref(false);
-const isSubmitting = ref(false);
-
-const form = ref({
-  id: '' as string | number,
-  subject_name: "",
-  academic_code: "",
-  metadata: [] as string[],
-  status: "Active"
-});
-const metadataInput = ref("");
-
 const openAddForm = () => {
-  isEditMode.value = false;
-  form.value = { id: '', subject_name: "", academic_code: "", metadata: [], status: "Active" };
-  metadataInput.value = "";
-  currentView.value = 'form';
+  router.push('/subjects/add');
 };
 
-const openEditForm = async (id: number | string) => {
-  isEditMode.value = true;
-  currentView.value = 'form';
-  const detail = await store.fetchDetail(id);
-  if (detail) {
-    form.value = { 
-      id: detail.id as string | number, 
-      subject_name: detail.subject_name, 
-      academic_code: detail.academic_code, 
-      metadata: Array.isArray(detail.metadata) ? detail.metadata : [],
-      status: detail.status || 'Active'
-    };
-    metadataInput.value = Array.isArray(detail.metadata) ? detail.metadata.join(", ") : "";
-  }
-};
-
-const goBack = () => {
-  currentView.value = 'list';
-};
-
-const handleSubmit = async () => {
-  try {
-    isSubmitting.value = true;
-    const finalPayload = {
-      ...form.value,
-      metadata: metadataInput.value.split(",").map(t => t.trim()).filter(Boolean)
-    };
-
-    if (isEditMode.value) {
-      const { id, ...putPayload } = finalPayload;
-      await store.updateItem(id, putPayload);
-    } else {
-      const { id, ...postPayload } = finalPayload;
-      await store.createItem(postPayload);
-    }
-    
-    await store.fetchList();
-    goBack();
-  } catch (error: any) {
-    alert(error.message || 'An error occurred');
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
-const isStatusActive = (status: string | undefined) => {
-  if (!status) return false;
-  return status.toLowerCase() === 'active' || status.toLowerCase() === 'aktif';
-};
-
-const handleStatusToggle = async (id: number | string, currentStatus: string | undefined) => {
-  const newStatus = isStatusActive(currentStatus) ? 'Non-Aktif' : 'Active';
-  try {
-    await store.toggleItemStatus(id, 'status', newStatus);
-  } catch (err: any) {
-    alert('Failed to toggle status: ' + (err.message || ''));
-  }
+const openEditForm = (id: number | string) => {
+  router.push(`/subjects/edit/${id}`);
 };
 
 const i18n = {
@@ -163,47 +94,37 @@ const prevPage = () => {
       <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10" data-aos="fade-down">
         <div>
           <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
-            {{ currentView === 'list' ? i18n.header.title : (isEditMode ? 'Edit Subject' : 'Define New Subject') }}
+            {{ i18n.header.title }}
           </h1>
           <p class="text-base-content/40 font-medium">
-            {{ currentView === 'list' ? i18n.header.subtitle : 'Configure subject parameters.' }}
+            {{ i18n.header.subtitle }}
           </p>
         </div>
         <div class="flex items-center gap-3">
-          <template v-if="currentView === 'list'">
-            <!-- Search Bar -->
-            <div class="relative group">
-              <Icon icon="lucide:search" class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors" />
-              <input
-                v-model="searchQuery"
-                @input="currentPage = 1"
-                type="text"
-                :placeholder="i18n.actions.search"
-                class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
-              />
-            </div>
-            <button
-              @click="openAddForm"
-              class="btn btn-primary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-primary/20 capitalize"
-            >
-              <Icon icon="lucide:plus" class="text-sm" />
-              {{ i18n.actions.add }}
-            </button>
-          </template>
-          <template v-else>
-            <button
-              @click="goBack"
-              class="btn btn-ghost rounded-xl px-6 font-bold gap-2 capitalize"
-            >
-              <Icon icon="lucide:arrow-left" class="text-sm" />
-              {{ i18n.actions.back }}
-            </button>
-          </template>
+          <!-- Search Bar -->
+          <div class="relative group">
+            <Icon icon="lucide:search" class="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/20 group-focus-within:text-primary transition-colors" />
+            <input
+              v-model="searchQuery"
+              @input="currentPage = 1"
+              type="text"
+              :placeholder="i18n.actions.search"
+              class="input bg-base-100 border-base-content/5 rounded-xl pl-12 w-64 focus:border-primary/50 text-base-content font-medium"
+            />
+          </div>
+          <button
+            @click="openAddForm"
+            class="btn btn-primary rounded-xl px-6 font-bold gap-2 shadow-lg shadow-primary/20 capitalize"
+          >
+            <Icon icon="lucide:plus" class="text-sm" />
+            {{ i18n.actions.add }}
+          </button>
         </div>
       </header>
 
       <!-- Main Content Area -->
-      <div v-if="currentView === 'list'"
+      <div
+
         class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] overflow-hidden flex flex-col"
         data-aos="fade-right"
         data-aos-delay="200"
@@ -267,14 +188,6 @@ const prevPage = () => {
                     >
                       <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </button>
-                    <!-- Status Toggle Switch -->
-                    <input 
-                      type="checkbox" 
-                      class="toggle toggle-sm toggle-success" 
-                      :checked="isStatusActive(sub.status)" 
-                      @change="handleStatusToggle(sub.id, sub.status)"
-                      title="Toggle Status"
-                    />
                   </div>
                 </td>
               </tr>
@@ -307,47 +220,6 @@ const prevPage = () => {
         </div>
       </div>
 
-      <!-- In-Page Form View -->
-      <div v-else-if="currentView === 'form'" class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] p-8 max-w-3xl" data-aos="fade-up">
-        <!-- Skeleton Loader -->
-        <div v-if="store.loadingDetail" class="animate-pulse space-y-6">
-          <div class="h-10 bg-base-200 rounded w-1/4"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-1/2"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full mt-8"></div>
-        </div>
-        
-        <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Subject Name</span></label>
-            <input v-model="form.subject_name" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="Mathematics" />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Academic Code</span></label>
-            <input v-model="form.academic_code" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="MAT101" />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Metadata (comma separated)</span></label>
-            <input v-model="metadataInput" type="text" class="input input-bordered focus:border-primary rounded-xl" placeholder="Core, Science, Grade 10" />
-          </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Status</span></label>
-            <select v-model="form.status" class="select select-bordered focus:border-primary rounded-xl" required>
-              <option value="Active">Active</option>
-              <option value="Non-Aktif">Non-Aktif</option>
-            </select>
-          </div>
-          <div class="form-actions mt-6 flex justify-end gap-3">
-            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">Cancel</button>
-            <button type="submit" class="btn btn-primary rounded-xl font-bold px-8 shadow-lg shadow-primary/20" :disabled="isSubmitting">
-              <span v-if="isSubmitting" class="loading loading-spinner loading-sm"></span>
-              {{ isEditMode ? 'Save Updates' : 'Define Subject' }}
-            </button>
-          </div>
-        </form>
-      </div>
     </div>
 
     <Sidebar />
