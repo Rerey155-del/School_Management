@@ -2,8 +2,11 @@
 import Sidebar from "@/components/Sidebar.vue";
 import { Icon } from "@iconify/vue";
 import { useStudentStore } from "@/stores/useStudentStore";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 import {
   classService,
   type ClassAutocompleteOption,
@@ -89,17 +92,28 @@ const handleSubmit = async () => {
   }
 };
 
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Edit Student",
-    subtitle: "Modify student profile and academic status.",
-  },
-  actions: {
-    back: "Back to List",
-  },
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Edit Siswa" : "Edit Student",
+      subtitle: isId ? "Ubah profil siswa dan status akademik." : "Modify student profile and academic status.",
+    },
+    actions: {
+      back: isId ? "Kembali ke Daftar" : "Back to List",
+      cancel: isId ? "Batal" : "Cancel",
+      submit: isId ? "Simpan Perubahan" : "Save Updates"
+    },
+    form: {
+      name: isId ? "Nama" : "Name",
+      nis: "NIS",
+      className: isId ? "Nama Kelas" : "Class Name",
+      searchPlaceholder: isId ? "Cari Kelas" : "Search Class"
+    }
+  };
+});
 </script>
 
 <template>
@@ -122,13 +136,22 @@ const i18n = {
           </p>
         </div>
 
-        <button
-          @click="goBack"
-          class="btn btn-ghost rounded-xl px-6 font-bold gap-2"
-        >
-          <Icon icon="lucide:arrow-left" class="text-sm" />
-          {{ i18n.actions.back }}
-        </button>
+        <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
+          <button
+            @click="goBack"
+            class="btn btn-ghost rounded-xl px-6 font-bold gap-2"
+          >
+            <Icon icon="lucide:arrow-left" class="text-sm" />
+            {{ i18n.actions.back }}
+          </button>
+        </div>
       </header>
 
       <!-- FORM CARD -->
@@ -164,7 +187,7 @@ const i18n = {
         <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-bold">Name</span>
+              <span class="label-text font-bold">{{ i18n.form.name }}</span>
             </label>
 
             <input
@@ -177,7 +200,7 @@ const i18n = {
 
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-bold">NIS</span>
+              <span class="label-text font-bold">{{ i18n.form.nis }}</span>
             </label>
 
             <input
@@ -190,7 +213,7 @@ const i18n = {
 
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-bold">Class Name</span>
+              <span class="label-text font-bold">{{ i18n.form.className }}</span>
             </label>
 
             <AutoComplete
@@ -198,7 +221,7 @@ const i18n = {
               :suggestions="filteredClasses"
               @complete="searchClass"
               optionLabel="name"
-              placeholder="Search Class"
+              :placeholder="i18n.form.searchPlaceholder"
               class="w-full"
               inputClass="input input-bordered rounded-xl w-full"
             />
@@ -210,7 +233,7 @@ const i18n = {
               class="btn btn-ghost rounded-xl"
               @click="goBack"
             >
-              Cancel
+              {{ i18n.actions.cancel }}
             </button>
 
             <button
@@ -223,7 +246,7 @@ const i18n = {
                 class="loading loading-spinner loading-sm"
               ></span>
 
-              Save Updates
+              {{ i18n.actions.submit }}
             </button>
           </div>
         </form>

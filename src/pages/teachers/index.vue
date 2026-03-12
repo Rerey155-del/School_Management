@@ -4,6 +4,9 @@ import { Icon } from "@iconify/vue";
 import { useTeacherStore } from "@/stores/useTeacherStore";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 
 const store = useTeacherStore();
 const router = useRouter();
@@ -32,34 +35,37 @@ const handleStatusToggle = async (id: number | string, currentStatus: string | u
   }
 };
 
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Faculty Directory",
-    subtitle: "Professional profiles of administrative and teaching staff."
-  },
-  actions: {
-    search: "Search by name...",
-    add: "Add New Teacher"
-  },
-  table: {
-    id: "ID",
-    identity: "Teacher Identity",
-    idNumber: "NIP / NIK",
-    email: "Institutional Email",
-    department: "Department",
-    status: "Status",
-    actions: "Actions",
-    noResults: "No results found for"
-  },
-  pagination: {
-    showing: "Showing",
-    of: "of",
-    staff: "Staff",
-    page: "Page"
-  }
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Direktori Pengajar" : "Faculty Directory",
+      subtitle: isId ? "Profil profesional dari staf pengajar dan administratif." : "Professional profiles of administrative and teaching staff."
+    },
+    actions: {
+      search: isId ? "Cari nama..." : "Search by name...",
+      add: isId ? "Tambah Guru Baru" : "Add New Teacher"
+    },
+    table: {
+      id: "ID",
+      identity: isId ? "Identitas Guru" : "Teacher Identity",
+      idNumber: "NIP / NIK",
+      email: "Email Institusi",
+      department: isId ? "Departemen" : "Department",
+      status: "Status",
+      actions: isId ? "Aksi" : "Actions",
+      noResults: isId ? "Tidak ada hasil untuk" : "No results found for"
+    },
+    pagination: {
+      showing: isId ? "Menampilkan" : "Showing",
+      of: isId ? "dari" : "of",
+      staff: isId ? "Staf" : "Staff",
+      page: isId ? "Halaman" : "Page"
+    }
+  };
+});
 
 // Search and Pagination Logic
 const searchQuery = ref("");
@@ -121,6 +127,13 @@ const prevPage = () => {
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
           <!-- Search Bar -->
           <div class="relative group">
             <Icon

@@ -2,8 +2,11 @@
 import Sidebar from "@/components/Sidebar.vue";
 import { Icon } from "@iconify/vue";
 import { useClassStore } from "@/stores/useClassStore";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 
 const store = useClassStore();
 const router = useRouter();
@@ -59,17 +62,28 @@ const handleSubmit = async () => {
   }
 };
 
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Initialize Room",
-    subtitle: "Provide classroom utilization parameters."
-  },
-  actions: {
-    back: "Back to List"
-  }
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Inisialisasi Ruangan" : "Initialize Room",
+      subtitle: isId ? "Berikan parameter utilisasi ruang kelas." : "Provide classroom utilization parameters."
+    },
+    actions: {
+      back: isId ? "Kembali ke Daftar" : "Back to List",
+      cancel: isId ? "Batal" : "Cancel",
+      submit: isId ? "Inisialisasi Ruang Kelas" : "Initialize Classroom"
+    },
+    form: {
+      designation: isId ? "Designasi Kelas" : "Class Designation",
+      roomId: "Room ID",
+      utilization: isId ? "Utilisasi (saat ini/maks)" : "Utilization (current/max)",
+      status: "Status"
+    }
+  };
+});
 </script>
 
 <template>
@@ -87,6 +101,13 @@ const i18n = {
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
           <button @click="goBack" class="btn btn-ghost rounded-xl px-6 font-bold gap-2 capitalize">
             <Icon icon="lucide:arrow-left" class="text-sm" />
             {{ i18n.actions.back }}
@@ -103,29 +124,29 @@ const i18n = {
           </div>
 
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Class Designation</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.designation }}</span></label>
             <input v-model="form.class_designation" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="Grade 10A" />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Room ID</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.roomId }}</span></label>
             <input v-model="form.room_id" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="RM-101" />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Utilization (current/max)</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.utilization }}</span></label>
             <input v-model="form.utilization" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="30/40" />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Status</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.status }}</span></label>
             <select v-model="form.status" class="select select-bordered focus:border-primary rounded-xl" required>
               <option value="Active">Active</option>
               <option value="Non-Active">Non-Active</option>
             </select>
           </div>
           <div class="form-actions mt-6 flex justify-end gap-3">
-            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">Cancel</button>
+            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">{{ i18n.actions.cancel }}</button>
             <button type="submit" class="btn btn-primary rounded-xl font-bold px-8 shadow-lg shadow-primary/20" :disabled="isSubmitting">
               <span v-if="isSubmitting" class="loading loading-spinner loading-sm"></span>
-              Initialize Classroom
+              {{ i18n.actions.submit }}
             </button>
           </div>
         </form>

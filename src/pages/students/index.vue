@@ -4,6 +4,9 @@ import { Icon } from "@iconify/vue";
 import { useStudentStore } from "@/stores/useStudentStore";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 
 const store = useStudentStore();
 const router = useRouter();
@@ -32,34 +35,37 @@ const handleStatusToggle = async (id: number | string, currentStatus: string | u
   }
 };
 
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Student Register",
-    subtitle: "Complete database of enrolled students and their academic status."
-  },
-  actions: {
-    search: "Search students...",
-    register: "Register Student",
-    back: "Back to List"
-  },
-  table: {
-    id: "ID",
-    name: "Student Name",
-    nis: "NIS",
-    className: "Class",
-    status: "Enrollment Status",
-    actions: "Actions",
-    noResults: "No results found for"
-  },
-  pagination: {
-    showing: "Showing",
-    of: "of",
-    students: "Students",
-    page: "Page"
-  }
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Daftar Siswa" : "Student Register",
+      subtitle: isId ? "Database lengkap siswa terdaftar dan status akademik mereka." : "Complete database of enrolled students and their academic status."
+    },
+    actions: {
+      search: isId ? "Cari siswa..." : "Search students...",
+      register: isId ? "Daftarkan Siswa" : "Register Student",
+      back: isId ? "Kembali ke Daftar" : "Back to List"
+    },
+    table: {
+      id: "ID",
+      name: isId ? "Nama Siswa" : "Student Name",
+      nis: "NIS",
+      className: isId ? "Kelas" : "Class",
+      status: isId ? "Status Pendaftaran" : "Enrollment Status",
+      actions: isId ? "Aksi" : "Actions",
+      noResults: isId ? "Tidak ada hasil untuk" : "No results found for"
+    },
+    pagination: {
+      showing: isId ? "Menampilkan" : "Showing",
+      of: isId ? "dari" : "of",
+      students: isId ? "Siswa" : "Students",
+      page: isId ? "Halaman" : "Page"
+    }
+  };
+});
 
 // Search and Pagination Logic
 const searchQuery = ref("");
@@ -121,6 +127,13 @@ const prevPage = () => {
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
           <!-- Search Bar -->
           <div class="relative group">
             <Icon

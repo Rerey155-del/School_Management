@@ -2,8 +2,11 @@
 import Sidebar from "@/components/Sidebar.vue";
 import { Icon } from "@iconify/vue";
 import { useScheduleStore } from "@/stores/useScheduleStore";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 import AutoComplete from "primevue/autocomplete";
 
 import {
@@ -130,17 +133,33 @@ const handleSubmit = async () => {
 };
 
 /* Text */
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Edit Schedule Slot",
-    subtitle: "Modify existing schedule assignments.",
-  },
-  actions: {
-    back: "Back to List",
-  },
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Edit Slot Jadwal" : "Edit Schedule Slot",
+      subtitle: isId ? "Ubah penugasan jadwal yang ada." : "Modify existing schedule assignments.",
+    },
+    actions: {
+      back: isId ? "Kembali ke Daftar" : "Back to List",
+      cancel: isId ? "Batal" : "Cancel",
+      submit: isId ? "Simpan Perubahan" : "Save Updates"
+    },
+    form: {
+      class: isId ? "Kelas / Kelompok" : "Class / Group",
+      date: isId ? "Tanggal" : "Date",
+      duration: isId ? "Durasi" : "Duration",
+      instructor: isId ? "Nama Pengajar" : "Instructor Name",
+      subject: isId ? "Mata Pelajaran" : "Subject",
+      to: isId ? "sampai" : "to",
+      placeholderClass: isId ? "Cari Kelas (misal: Kelas 10A)" : "Search Class (e.g., Grade 10A)",
+      placeholderInstructor: isId ? "Cari Pengajar (misal: Bpk. Wilson)" : "Search Instructor (e.g., Mr. Wilson)",
+      placeholderSubject: isId ? "Cari Mata Pelajaran (misal: Matematika)" : "Search Subject (e.g., Mathematics)"
+    }
+  };
+});
 </script>
 
 <template>
@@ -163,6 +182,13 @@ const i18n = {
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
           <button
             @click="goBack"
             class="btn btn-ghost rounded-xl px-6 font-bold gap-2 capitalize"
@@ -222,14 +248,14 @@ const i18n = {
         <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">
           <div class="form-control flex flex-col pt-1">
             <label class="label"
-              ><span class="label-text font-bold">Class / Group</span></label
+              ><span class="label-text font-bold">{{ i18n.form.class }}</span></label
             >
             <AutoComplete
               v-model="form.class_name"
               :suggestions="filteredClasses"
               @complete="searchClass"
               optionLabel="name"
-              placeholder="Search Class (e.g., Grade 10A)"
+              :placeholder="i18n.form.placeholderClass"
               :delay="300"
               class="w-full"
               inputClass="input input-bordered focus:border-primary rounded-xl w-full"
@@ -238,7 +264,7 @@ const i18n = {
           </div>
           <div class="form-control">
             <label class="label"
-              ><span class="label-text font-bold">Date</span></label
+              ><span class="label-text font-bold">{{ i18n.form.date }}</span></label
             >
             <input
               v-model="form.day"
@@ -249,7 +275,7 @@ const i18n = {
           </div>
           <div class="form-control">
             <label class="label"
-              ><span class="label-text font-bold">Duration</span></label
+              ><span class="label-text font-bold">{{ i18n.form.duration }}</span></label
             >
             <div class="flex items-center gap-3">
               <input
@@ -258,7 +284,7 @@ const i18n = {
                 class="input input-bordered focus:border-primary rounded-xl w-full"
                 required
               />
-              <span class="font-bold text-base-content/40">to</span>
+              <span class="font-bold text-base-content/40">{{ i18n.form.to }}</span>
               <input
                 type="time"
                 v-model="endTime"
@@ -269,14 +295,14 @@ const i18n = {
           </div>
           <div class="form-control flex flex-col pt-1">
             <label class="label"
-              ><span class="label-text font-bold">Instructor Name</span></label
+              ><span class="label-text font-bold">{{ i18n.form.instructor }}</span></label
             >
             <AutoComplete
               v-model="form.instructor"
               :suggestions="filteredTeachers"
               @complete="searchTeacher"
               optionLabel="name"
-              placeholder="Search Instructor (e.g., Mr. Wilson)"
+              :placeholder="i18n.form.placeholderInstructor"
               :delay="300"
               class="w-full"
               inputClass="input input-bordered focus:border-primary rounded-xl w-full"
@@ -285,14 +311,14 @@ const i18n = {
           </div>
           <div class="form-control flex flex-col pt-1">
             <label class="label"
-              ><span class="label-text font-bold">Subject</span></label
+              ><span class="label-text font-bold">{{ i18n.form.subject }}</span></label
             >
             <AutoComplete
               v-model="form.subject"
               :suggestions="filteredSubjects"
               @complete="searchSubject"
               optionLabel="name"
-              placeholder="Search Subject (e.g., Mathematics)"
+              :placeholder="i18n.form.placeholderSubject"
               :delay="300"
               class="w-full"
               inputClass="input input-bordered focus:border-primary rounded-xl w-full"
@@ -306,7 +332,7 @@ const i18n = {
               @click="goBack"
               :disabled="isSubmitting"
             >
-              Cancel
+              {{ i18n.actions.cancel }}
             </button>
             <button
               type="submit"
@@ -317,7 +343,7 @@ const i18n = {
                 v-if="isSubmitting"
                 class="loading loading-spinner loading-sm"
               ></span>
-              Save Updates
+              {{ i18n.actions.submit }}
             </button>
           </div>
         </form>

@@ -2,8 +2,11 @@
 import Sidebar from "@/components/Sidebar.vue";
 import { Icon } from "@iconify/vue";
 import { useTeacherStore } from "@/stores/useTeacherStore";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 import { subjectService, type SubjectAutocompleteOption } from "@/services/subjectService";
 import AutoComplete from "primevue/autocomplete";
 
@@ -72,17 +75,29 @@ const handleSubmit = async () => {
   }
 };
 
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Edit Teacher",
-    subtitle: "Modify professionaal profile for the faculty directory."
-  },
-  actions: {
-    back: "Back to List"
-  }
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Edit Guru" : "Edit Teacher",
+      subtitle: isId ? "Ubah profil profesional untuk direktori fakultas." : "Modify professional profile for the faculty directory."
+    },
+    actions: {
+      back: isId ? "Kembali ke Daftar" : "Back to List",
+      cancel: isId ? "Batal" : "Cancel",
+      submit: isId ? "Simpan Perubahan" : "Save Updates"
+    },
+    form: {
+      name: isId ? "Nama" : "Name",
+      nip: "NIP / NIK",
+      email: "Email",
+      department: isId ? "Departemen (Mata Pelajaran)" : "Department (Subject)",
+      searchPlaceholder: isId ? "Cari Mata Pelajaran (min. 3 karakter)" : "Search Subject (min. 3 chars)"
+    }
+  };
+});
 </script>
 
 <template>
@@ -100,6 +115,13 @@ const i18n = {
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
           <button @click="goBack" class="btn btn-ghost rounded-xl px-6 font-bold gap-2 capitalize">
             <Icon icon="lucide:arrow-left" class="text-sm" />
             {{ i18n.actions.back }}
@@ -120,25 +142,25 @@ const i18n = {
         
         <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Name</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.name }}</span></label>
             <input v-model="form.name" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="John Doe" />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">NIP / NIK</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.nip }}</span></label>
             <input v-model="form.nip" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="1987xxxxxxx" />
           </div>
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Email</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.email }}</span></label>
             <input v-model="form.email" type="email" class="input input-bordered focus:border-primary rounded-xl" required placeholder="john.doe@school.edu" />
           </div>
           <div class="form-control flex flex-col pt-1">
-            <label class="label"><span class="label-text font-bold">Department (Subject)</span></label>
+            <label class="label"><span class="label-text font-bold">{{ i18n.form.department }}</span></label>
             <AutoComplete 
               v-model="form.department" 
               :suggestions="filteredDepartments" 
               @complete="searchDepartment" 
               optionLabel="name" 
-              placeholder="Search Subject (min. 3 chars)"
+              :placeholder="i18n.form.searchPlaceholder"
               :delay="300"
               class="w-full"
               inputClass="input input-bordered focus:border-primary rounded-xl w-full"
@@ -147,10 +169,10 @@ const i18n = {
           </div>
 
           <div class="form-actions mt-6 flex justify-end gap-3">
-            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">Cancel</button>
+            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">{{ i18n.actions.cancel }}</button>
             <button type="submit" class="btn btn-primary rounded-xl font-bold px-8 shadow-lg shadow-primary/20" :disabled="isSubmitting">
               <span v-if="isSubmitting" class="loading loading-spinner loading-sm"></span>
-              Save Updates
+              {{ i18n.actions.submit }}
             </button>
           </div>
         </form>

@@ -4,6 +4,9 @@ import { Icon } from "@iconify/vue";
 import { useClassStore } from "@/stores/useClassStore";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 import Sidebar from "@/components/Sidebar.vue";
 
 const store = useClassStore();
@@ -19,34 +22,37 @@ const openAddForm = () => {
 
 
 
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Classrooms",
-    subtitle: "Structural organization of students and capacity control.",
-  },
-  actions: {
-    search: "Search classes...",
-    add: "Initialize Room",
-    back: "Back to List",
-  },
-  table: {
-    id: "ID",
-    designation: "Class Designation",
-    roomId: "Room ID",
-    utilization: "Utilization",
-    status: "Status",
-    actions: "Actions",
-    noResults: "No results found for",
-  },
-  pagination: {
-    showing: "Showing",
-    of: "of",
-    classes: "Classes",
-    page: "Page",
-  },
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Ruang Kelas" : "Classrooms",
+      subtitle: isId ? "Organisasi struktural siswa dan kontrol kapasitas." : "Structural organization of students and capacity control.",
+    },
+    actions: {
+      search: isId ? "Cari kelas..." : "Search classes...",
+      add: isId ? "Inisialisasi Ruangan" : "Initialize Room",
+      back: isId ? "Kembali ke Daftar" : "Back to List",
+    },
+    table: {
+      id: "ID",
+      designation: isId ? "Designasi Kelas" : "Class Designation",
+      roomId: "Room ID",
+      utilization: isId ? "Utilisasi" : "Utilization",
+      status: "Status",
+      actions: isId ? "Aksi" : "Actions",
+      noResults: isId ? "Tidak ada hasil untuk" : "No results found for",
+    },
+    pagination: {
+      showing: isId ? "Menampilkan" : "Showing",
+      of: isId ? "dari" : "of",
+      classes: isId ? "Kelas" : "Classes",
+      page: isId ? "Halaman" : "Page",
+    },
+  };
+});
 
 // Search and Pagination Logic
 const searchQuery = ref("");
@@ -114,6 +120,13 @@ const prevPage = () => {
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
           <!-- Search Bar -->
           <div class="relative group">
             <Icon

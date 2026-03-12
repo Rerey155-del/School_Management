@@ -4,6 +4,9 @@ import { Icon } from "@iconify/vue";
 import { useScheduleStore } from "@/stores/useScheduleStore";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useDashboardStore } from "@/stores/useDashboardStore";
+
+const dashboardStore = useDashboardStore();
 
 const store = useScheduleStore();
 const router = useRouter();
@@ -18,36 +21,38 @@ const openAddForm = () => {
 
 
 
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Academic Timeline",
-    subtitle: "Dynamic scheduling and classroom occupancy monitoring.",
-  },
-  actions: {
-    search: "Search schedules...",
-    add: "Slot Allocation",
-    back: "Back to List",
-  },
-  table: {
-    id: "ID",
-    className: "Class",
-    day: "Day",
-    period: "Period / Duration",
-    instructor: "Instructor",
-    subject: "Subject",
-
-    actions: "Actions",
-    noResults: "No results found for",
-  },
-  pagination: {
-    showing: "Showing",
-    of: "of",
-    schedules: "Schedules",
-    page: "Page",
-  },
-};
+const i18n = computed(() => {
+  const isId = dashboardStore.locale === 'id';
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+    header: {
+      title: isId ? "Garis Waktu Akademik" : "Academic Timeline",
+      subtitle: isId ? "Penjadwalan dinamis dan pemantauan okupansi ruang kelas." : "Dynamic scheduling and classroom occupancy monitoring.",
+    },
+    actions: {
+      search: isId ? "Cari jadwal..." : "Search schedules...",
+      add: isId ? "Alokasi Slot" : "Slot Allocation",
+      back: isId ? "Kembali ke Daftar" : "Back to List",
+    },
+    table: {
+      id: "ID",
+      className: isId ? "Kelas" : "Class",
+      day: isId ? "Hari" : "Day",
+      period: isId ? "Periode / Durasi" : "Period / Duration",
+      instructor: isId ? "Pengajar" : "Instructor",
+      subject: isId ? "Mata Pelajaran" : "Subject",
+      actions: isId ? "Aksi" : "Actions",
+      noResults: isId ? "Tidak ada hasil untuk" : "No results found for",
+    },
+    pagination: {
+      showing: isId ? "Menampilkan" : "Showing",
+      of: isId ? "dari" : "of",
+      schedules: isId ? "Jadwal" : "Schedules",
+      page: isId ? "Halaman" : "Page",
+    },
+  };
+});
 
 // Search and Pagination Logic
 const searchQuery = ref("");
@@ -118,6 +123,13 @@ const prevPage = () => {
           </p>
         </div>
         <div class="flex items-center gap-3">
+          <!-- Global Language Switcher -->
+          <div class="flex items-center gap-2 mr-2 border-r border-base-content/5 pr-4">
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'id' ? 'text-primary' : 'text-base-content/40'">ID</span>
+            <input type="checkbox" class="toggle toggle-primary toggle-sm" :checked="dashboardStore.locale === 'en'" @change="dashboardStore.toggleLocale()" />
+            <span class="text-xs font-bold font-mono" :class="dashboardStore.locale === 'en' ? 'text-primary' : 'text-base-content/40'">EN</span>
+          </div>
+
           <!-- Search Bar -->
           <div class="relative group">
             <Icon
