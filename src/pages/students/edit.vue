@@ -4,7 +4,10 @@ import { Icon } from "@iconify/vue";
 import { useStudentStore } from "@/stores/useStudentStore";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { classService, type ClassAutocompleteOption } from "@/services/classService";
+import {
+  classService,
+  type ClassAutocompleteOption,
+} from "@/services/classService";
 import AutoComplete from "primevue/autocomplete";
 
 import AOS from "aos";
@@ -109,7 +112,6 @@ const i18n = {
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
 
     <div class="drawer-content flex flex-col p-6 lg:p-10">
-
       <!-- HEADER -->
       <header
         class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10"
@@ -140,10 +142,8 @@ const i18n = {
         data-aos="fade-up"
         data-aos-delay="150"
       >
-
         <!-- Skeleton -->
         <div v-if="showSkeleton" class="space-y-6 animate-pulse">
-
           <div class="space-y-2">
             <div class="h-3 w-24 bg-base-200 rounded"></div>
             <div class="h-12 bg-base-200 rounded-xl"></div>
@@ -163,16 +163,10 @@ const i18n = {
             <div class="h-3 w-28 bg-base-200 rounded"></div>
             <div class="h-12 bg-base-200 rounded-xl"></div>
           </div>
-
         </div>
 
         <!-- FORM -->
-        <form
-          v-else
-          @submit.prevent="handleSubmit"
-          class="flex flex-col gap-5"
-        >
-
+        <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">
           <div class="form-control">
             <label class="label">
               <span class="label-text font-bold">Name</span>
@@ -201,21 +195,6 @@ const i18n = {
 
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-bold">Gender</span>
-            </label>
-
-            <select
-              v-model="form.gender"
-              class="select select-bordered rounded-xl"
-              required
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
-
-          <div class="form-control">
-            <label class="label">
               <span class="label-text font-bold">Class Name</span>
             </label>
 
@@ -231,7 +210,6 @@ const i18n = {
           </div>
 
           <div class="flex justify-end gap-3 mt-6">
-
             <button
               type="button"
               class="btn btn-ghost rounded-xl"
@@ -252,11 +230,8 @@ const i18n = {
 
               Save Updates
             </button>
-
           </div>
-
         </form>
-
       </div>
     </div>
 

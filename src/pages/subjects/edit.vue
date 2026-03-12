@@ -15,7 +15,6 @@ const form = ref({
   id: '' as string | number,
   subject_name: "",
   academic_code: "",
-  metadata: [] as string[],
 });
 const metadataInput = ref("");
 
@@ -27,7 +26,7 @@ onMounted(async () => {
       id: detail.id as string | number, 
       subject_name: detail.subject_name || "", 
       academic_code: detail.academic_code || "", 
-      metadata: Array.isArray(detail.metadata) ? detail.metadata : [],
+     
     };
     metadataInput.value = Array.isArray(detail.metadata) ? detail.metadata.join(", ") : "";
   } else {
@@ -112,10 +111,7 @@ const i18n = {
             <label class="label"><span class="label-text font-bold">Academic Code</span></label>
             <input v-model="form.academic_code" type="text" class="input input-bordered focus:border-primary rounded-xl" required placeholder="MAT101" />
           </div>
-          <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Metadata (comma separated)</span></label>
-            <input v-model="metadataInput" type="text" class="input input-bordered focus:border-primary rounded-xl" placeholder="Core, Science, Grade 10" />
-          </div>
+          
           
           <div class="form-actions mt-6 flex justify-end gap-3">
             <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">Cancel</button>
