@@ -13,8 +13,8 @@ const isLoading = ref(false);
 const error = ref("");
 
 const i18n = {
-  brand: "School",
-  version: "V3",
+  brand: "Manajement Sekolah",
+  version: "V3",    
   subtitle: "Professional Management Suite",
   errors: {
     emptyFields: "Please enter both username and password.",
@@ -76,8 +76,8 @@ const handleLogin = async () => {
         >
           S
         </div>
-        <h1 class="text-3xl font-black text-base-content tracking-tight uppercase">
-          School<span class="text-primary font-black">V3</span>
+        <h1 class="text-3xl font-black text-base-content tracking-tight capitalize">
+          Management Sekolah <span class="text-primary font-black">V3</span>
         </h1>
         <p class="text-base-content/40 font-medium mt-2">{{ i18n.subtitle }}</p>
       </div>
