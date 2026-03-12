@@ -216,16 +216,7 @@ const i18n = computed(() => {
             
             <template v-else>
                <div class="flex flex-col gap-4">
-                  <!-- Total Admins -->
-                  <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl border border-base-200">
-                    <div class="flex items-center gap-4">
-                      <div class="w-10 h-10 rounded-xl bg-info/10 text-info flex items-center justify-center">
-                        <i class="fas fa-shield-alt text-lg"></i>
-                      </div>
-                      <span class="font-bold text-base-content/80">{{ i18n.widgets.schoolData.totalAdmins }}</span>
-                    </div>
-                    <span class="text-xl font-black text-info">{{ store.schoolSummary.totalAdmins }}</span>
-                  </div>
+                  
                   <!-- Active Teachers -->
                   <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl border border-base-200">
                     <div class="flex items-center gap-4">
