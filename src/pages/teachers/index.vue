@@ -46,6 +46,7 @@ const i18n = {
     add: "Add New Teacher"
   },
   table: {
+    id: "ID",
     identity: "Teacher Identity",
     idNumber: "NIP / NIK",
     email: "Institutional Email",
@@ -159,14 +160,15 @@ const prevPage = () => {
           <table class="table table-lg w-full">
             <thead>
               <tr
-                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
+                class="text-base-content/20 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5 bg-base-content/[0.02]"
               >
-                <th class="pl-12 py-8">{{ i18n.table.identity }}</th>
-                <th class="py-8">{{ i18n.table.idNumber }}</th>
-                <th class="py-8">{{ i18n.table.email }}</th>
-                <th class="py-8 text-center">{{ i18n.table.department }}</th>
-                <th class="py-8 text-center">{{ i18n.table.status }}</th>
-                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
+                <th class="pl-12 py-6 w-20 text-center">{{ i18n.table.id }}</th>
+                <th class="py-6">{{ i18n.table.identity }}</th>
+                <th class="py-6 text-center">{{ i18n.table.idNumber }}</th>
+                <th class="py-6 text-center">{{ i18n.table.email }}</th>
+                <th class="py-6 text-center">{{ i18n.table.department }}</th>
+                <th class="py-6 text-center">{{ i18n.table.status }}</th>
+                <th class="pr-12 py-6 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
@@ -175,7 +177,10 @@ const prevPage = () => {
                 :key="teacher.id"
                 class="border-b border-base-content/5 last:border-0 hover:bg-base-content/[0.02] transition-colors"
               >
-                <td class="pl-12 py-10">
+                <td class="pl-12 py-10 font-bold text-base-content/20 text-center">
+                  #{{ teacher.id }}
+                </td>
+                <td class="py-10">
                   <div class="flex items-center gap-4">
                     <div class="avatar placeholder">
                       <div
@@ -237,7 +242,7 @@ const prevPage = () => {
               <!-- Empty State -->
               <tr v-if="paginatedTeachers.length === 0">
                 <td
-                  colspan="6"
+                  colspan="7"
                   class="py-20 text-center text-base-content/20 font-bold italic"
                 >
                   {{ i18n.table.noResults }} "{{ searchQuery }}"

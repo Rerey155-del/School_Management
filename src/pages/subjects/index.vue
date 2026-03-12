@@ -150,12 +150,11 @@ const prevPage = () => {
         <div v-else class="overflow-x-auto">
           <table class="table table-lg w-full">
             <thead>
-              <tr class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5">
-                <th class="pl-12 py-8 w-16 text-center">{{ i18n.table.id }}</th>
-                <th class="py-8 font-bold text-primary">{{ i18n.table.name }}</th>
-                <th class="py-8">{{ i18n.table.code }}</th>
-              
-                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
+              <tr class="text-base-content/20 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5 bg-base-content/[0.02]">
+                <th class="pl-12 py-6 w-20 text-center">{{ i18n.table.id }}</th>
+                <th class="py-6">{{ i18n.table.name }}</th>
+                <th class="py-6">{{ i18n.table.code }}</th>
+                <th class="pr-12 py-6 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>

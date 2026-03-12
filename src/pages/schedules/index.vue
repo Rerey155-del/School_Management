@@ -33,6 +33,7 @@ const i18n = {
     back: "Back to List",
   },
   table: {
+    id: "ID",
     className: "Class",
     day: "Day",
     period: "Period / Duration",
@@ -156,14 +157,15 @@ const prevPage = () => {
           <table class="table table-lg w-full">
             <thead>
               <tr
-                class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
+                class="text-base-content/20 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5 bg-base-content/[0.02]"
               >
-                <th class="pl-12 py-8">{{ i18n.table.className }}</th>
-                <th class="py-8">{{ i18n.table.day }}</th>
-                <th class="py-8">{{ i18n.table.period }}</th>
-                <th class="py-8">{{ i18n.table.instructor }}</th>
-                <th class="py-8">{{ i18n.table.subject }}</th>
-                <th class="pr-12 py-8 text-right">{{ i18n.table.actions }}</th>
+                <th class="pl-12 py-6 w-20 text-center">{{ i18n.table.id }}</th>
+                <th class="py-6">{{ i18n.table.className }}</th>
+                <th class="py-6 text-center">{{ i18n.table.day }}</th>
+                <th class="py-6 text-center">{{ i18n.table.period }}</th>
+                <th class="py-6">{{ i18n.table.instructor }}</th>
+                <th class="py-6">{{ i18n.table.subject }}</th>
+                <th class="pr-12 py-6 text-right">{{ i18n.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
@@ -172,7 +174,10 @@ const prevPage = () => {
                 :key="sch.id"
                 class="border-b border-base-content/5 last:border-0 hover:bg-base-content/[0.02] transition-colors"
               >
-                <td class="pl-12 py-10 font-bold text-lg text-base-content/90">
+                <td class="pl-12 py-10 font-bold text-base-content/20 text-center">
+                  #{{ sch.id }}
+                </td>
+                <td class="py-10 font-bold text-lg text-base-content/90">
                   {{ sch.class_name }}
                 </td>
                 <td class="py-10 font-bold text-lg text-base-content/90">
@@ -206,7 +211,7 @@ const prevPage = () => {
               </tr>
               <tr v-if="paginatedSchedules.length === 0">
                 <td
-                  colspan="8"
+                  colspan="7"
                   class="py-20 text-center text-base-content/20 font-bold italic"
                 >
                   {{ i18n.table.noResults }} "{{ searchQuery }}"
