@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import Sidebar from "@/components/Sidebar.vue";
+
 import { Icon } from "@iconify/vue";
 import { useClassStore } from "@/stores/useClassStore";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import Sidebar from "@/components/Sidebar.vue";
 
 const store = useClassStore();
 const router = useRouter();
