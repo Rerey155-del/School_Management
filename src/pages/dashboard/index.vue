@@ -2,13 +2,22 @@
 import { onMounted, computed } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import { useDashboardStore } from "@/stores/useDashboardStore";
+import { useAuth } from "@/composables/useAuth";
+import { useRouter } from "vue-router";
 import Skeleton from "primevue/skeleton";
 
 const store = useDashboardStore();
+const { logout } = useAuth();
+const router = useRouter();
 
 onMounted(() => {
   store.fetchDashboardData();
 });
+
+const handleLogout = () => {
+  logout();
+  router.push("/login");
+};
 
 const i18n = computed(() => {
   const isId = store.locale === 'id';
@@ -25,6 +34,7 @@ const i18n = computed(() => {
       profile: isId ? "Profil Saya" : "My Profile",
       security: isId ? "Keamanan" : "Security",
       logout: isId ? "Keluar" : "Logout",
+      settings: isId ? "Pengaturan" : "Settings",
       account: isId ? "Pengaturan Akun" : "Account Settings"
     },
     actions: {
@@ -115,20 +125,19 @@ const i18n = computed(() => {
             </div>
             <ul
               tabindex="0"
-              class="mt-3 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-56 border border-base-200"
+              class="mt-3 z-[100] p-2 shadow-xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-56 border border-base-200"
             >
               <li class="menu-title">{{ i18n.user.account }}</li>
               <li>
-                <a><i class="fas fa-user-circle"></i> {{ i18n.user.profile }}</a>
-              </li>
-              <li>
-                <a><i class="fas fa-shield-alt"></i> {{ i18n.user.security }}</a>
+                <router-link to="/settings">
+                  <i class="fas fa-cog"></i> {{ i18n.user.settings }}
+                </router-link>
               </li>
               <div class="divider my-1"></div>
               <li>
-                <a class="text-error font-bold"
-                  ><i class="fas fa-sign-out-alt"></i> {{ i18n.user.logout }}</a
-                >
+                <a @click="handleLogout" class="text-error font-bold">
+                  <i class="fas fa-sign-out-alt"></i> {{ i18n.user.logout }}
+                </a>
               </li>
             </ul>
           </div>
