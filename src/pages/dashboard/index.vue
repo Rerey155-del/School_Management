@@ -7,7 +7,7 @@ import { useRouter } from "vue-router";
 import Skeleton from "primevue/skeleton";
 
 const store = useDashboardStore();
-const { logout } = useAuth();
+const { user, logout } = useAuth();
 const router = useRouter();
 
 onMounted(() => {
@@ -103,11 +103,11 @@ const i18n = computed(() => {
           </div>
 
           <div class="hidden md:block px-4 text-right">
-            <p class="text-sm font-bold">{{ i18n.user.role }}</p>
+            <p class="text-sm font-bold">{{ user?.full_name || user?.username }}</p>
             <p
               class="text-xs text-base-content/50 uppercase tracking-widest font-bold"
             >
-              {{ i18n.user.department }}
+              {{ user?.role || i18n.user.role }}
             </p>
           </div>
           <div class="dropdown dropdown-end">
@@ -119,7 +119,7 @@ const i18n = computed(() => {
               <div class="w-10 rounded-full">
                 <img
                   alt="Admin Profile"
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin"
+                  :src="user?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin'"
                 />
               </div>
             </div>
@@ -132,9 +132,6 @@ const i18n = computed(() => {
                 <router-link to="/settings">
                   <i class="fas fa-cog"></i> {{ i18n.user.settings }}
                 </router-link>
-              </li>
-              <li>
-                <a><i class="fas fa-shield-alt"></i> {{ i18n.user.security }}</a>
               </li>
               <div class="divider my-1"></div>
               <li>
