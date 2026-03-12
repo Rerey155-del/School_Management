@@ -2,13 +2,66 @@
 import Sidebar from "@/components/Sidebar.vue";
 import { useSettings } from "@/composables/useSettings";
 import { useUsers } from "@/composables/useUsers";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Icon } from "@iconify/vue";
 
 const { profile, preferences, security, updateProfile, changePassword } = useSettings();
 const { users, updateUser } = useUsers();
 
+/* Language State */
+const locale = ref("en");
+
+const toggleLanguage = () => {
+  locale.value = locale.value === "en" ? "id" : "en";
+};
+
+const i18n = computed(() => {
+  const isId = locale.value === "id";
+
+  return {
+    brand: "SCHOOL",
+    version: "V3",
+
+    header: {
+      title: isId ? "Pengaturan" : "Settings",
+      subtitle: isId
+        ? "Kelola pengaturan akun dan preferensi aplikasi."
+        : "Manage your account settings and application preferences."
+    },
+
+    profile: {
+      title: isId ? "Profil Admin" : "Admin Profile",
+      fullName: isId ? "Nama Lengkap" : "Full Name",
+      username: "Username",
+      email: "Email",
+      password: isId ? "Kata Sandi" : "Password",
+      update: isId ? "Perbarui Profil" : "Update Profile"
+    },
+
+    preferences: {
+      title: isId ? "Preferensi Aplikasi" : "App Preferences",
+      darkMode: isId ? "Mode Gelap" : "Dark Mode",
+      darkModeDesc: isId
+        ? "Aktifkan tema gelap untuk dashboard."
+        : "Turn on dark theme for the dashboard."
+    },
+
+    usersTable: {
+      title: isId ? "Manajemen Admin" : "Admin Users Management",
+      fullName: isId ? "Nama Lengkap" : "Full Name",
+      username: "Username",
+      email: "Email",
+      role: isId ? "Peran" : "Role",
+      status: isId ? "Status" : "Status",
+      lastLogin: isId ? "Login Terakhir" : "Last Login",
+      actions: isId ? "Aksi" : "Actions"
+    }
+  };
+});
+
+/* User Modal */
 const isUserModalOpen = ref(false);
+
 const editUserForm = ref({
   id: 0,
   full_name: "",
@@ -28,43 +81,6 @@ const handleUserUpdate = async () => {
   await updateUser(editUserForm.value.id, editUserForm.value);
   isUserModalOpen.value = false;
 };
-
-const i18n = {
-  brand: "SCHOOL",
-  version: "V3",
-  header: {
-    title: "Settings",
-    subtitle: "Manage your account settings and application preferences."
-  },
-  profile: {
-    title: "Admin Profile",
-    fullName: "Full Name",
-    username: "Username",
-    email: "Email",
-    password: "Password",
-    update: "Update Profile"
-  },
-  preferences: {
-    title: "App Preferences",
-    darkMode: "Dark Mode",
-    darkModeDesc: "Turn on dark theme for the dashboard."
-  },
-  security: {
-    title: "Security Settings",
-    lastChange: "Last changed",
-    change: "Change Password"
-  },
-  usersTable: {
-    title: "Admin Users Management",
-    fullName: "Full Name",
-    username: "Username",
-    email: "Email",
-    role: "Role",
-    status: "Status",
-    lastLogin: "Last Login",
-    actions: "Actions"
-  }
-};
 </script>
 
 <template>
@@ -80,7 +96,8 @@ const i18n = {
           <i class="fas fa-bars text-xl"></i>
         </label>
         <span class="text-xl font-bold tracking-tight"
-          >{{ i18n.brand }}<span class="text-primary">{{ i18n.version }}</span></span
+          >{{ i18n.brand
+          }}<span class="text-primary">{{ i18n.version }}</span></span
         >
         <div class="avatar w-8 h-8 rounded-full overflow-hidden">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" />
@@ -89,12 +106,36 @@ const i18n = {
 
       <!-- Header Section -->
       <header class="mb-10" data-aos="fade-down">
-        <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
+        <h1
+          class="text-4xl font-extrabold tracking-tight text-base-content mb-2"
+        >
           {{ i18n.header.title }}
         </h1>
         <p class="text-base-content/40 font-medium tracking-tight">
           {{ i18n.header.subtitle }}
         </p>
+        <div class="flex items-center gap-2 mt-4">
+          <span
+            class="text-xs font-bold"
+            :class="locale === 'id' ? 'text-primary' : 'opacity-40'"
+          >
+            ID
+          </span>
+  
+          <input
+            type="checkbox"
+            class="toggle toggle-primary toggle-sm"
+            :checked="locale === 'en'"
+            @change="toggleLanguage"
+          />
+  
+          <span
+            class="text-xs font-bold"
+            :class="locale === 'en' ? 'text-primary' : 'opacity-40'"
+          >
+            EN
+          </span>
+        </div>
       </header>
 
       <div class="space-y-8 w-full">
@@ -104,7 +145,9 @@ const i18n = {
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <h2 class="text-xl font-bold text-base-content mb-8">{{ i18n.profile.title }}</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">
+            {{ i18n.profile.title }}
+          </h2>
 
           <div class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -183,11 +226,15 @@ const i18n = {
           data-aos="fade-up"
           data-aos-delay="200"
         >
-          <h2 class="text-xl font-bold text-base-content mb-8">{{ i18n.preferences.title }}</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">
+            {{ i18n.preferences.title }}
+          </h2>
 
           <div class="flex items-center justify-between">
             <div>
-              <p class="font-bold text-base-content/90">{{ i18n.preferences.darkMode }}</p>
+              <p class="font-bold text-base-content/90">
+                {{ i18n.preferences.darkMode }}
+              </p>
               <p class="text-sm text-base-content/30 font-medium">
                 {{ i18n.preferences.darkModeDesc }}
               </p>
@@ -201,7 +248,6 @@ const i18n = {
         </section>
 
         <!-- Security Settings -->
-       
 
         <!-- Admin Users Management -->
         <section
@@ -209,16 +255,19 @@ const i18n = {
           data-aos="fade-up"
           data-aos-delay="400"
         >
-          <h2 class="text-xl font-bold text-base-content mb-8">{{ i18n.usersTable.title }}</h2>
+          <h2 class="text-xl font-bold text-base-content mb-8">
+            {{ i18n.usersTable.title }}
+          </h2>
 
           <div class="overflow-x-auto">
             <table class="table table-lg w-full">
               <thead>
-                <tr class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5">
+                <tr
+                  class="text-base-content/30 font-bold uppercase tracking-widest text-[10px] border-b border-base-content/5"
+                >
                   <th class="py-8">{{ i18n.usersTable.fullName }}</th>
                   <th class="py-8">{{ i18n.usersTable.username }}</th>
                   <th class="py-8">{{ i18n.usersTable.email }}</th>
-                
                 </tr>
               </thead>
               <tbody>
@@ -227,21 +276,25 @@ const i18n = {
                   :key="user.id"
                   class="border-b border-base-content/5 last:border-0 hover:bg-base-content/[0.02] transition-colors"
                 >
-                  <td class="py-10 font-bold text-lg text-base-content/90">{{ user.full_name }}</td>
-                  <td class="py-10 font-bold text-base-content/60">@{{ user.username }}</td>
+                  <td class="py-10 font-bold text-lg text-base-content/90">
+                    {{ user.full_name }}
+                  </td>
+                  <td class="py-10 font-bold text-base-content/60">
+                    @{{ user.username }}
+                  </td>
                   <td class="py-10 text-base-content/60">{{ user.email }}</td>
                   <td class="py-10 font-bold text-primary">{{ user.role }}</td>
                   <td class="py-10">
                     <span
                       :class="`badge badge-sm font-black uppercase text-[10px] p-2 h-auto ${
-                        user.status === 'Active' ? 'badge-success shadow-lg shadow-success/20' : 'badge-ghost opacity-40'
+                        user.status === 'Active'
+                          ? 'badge-success shadow-lg shadow-success/20'
+                          : 'badge-ghost opacity-40'
                       }`"
                     >
                       {{ user.status }}
                     </span>
                   </td>
-                  
-                  
                 </tr>
               </tbody>
             </table>
@@ -249,8 +302,6 @@ const i18n = {
         </section>
       </div>
     </div>
-
-    
 
     <!-- Sidebar Component -->
     <Sidebar />

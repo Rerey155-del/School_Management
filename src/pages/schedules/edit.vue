@@ -5,14 +5,17 @@ import { useScheduleStore } from "@/stores/useScheduleStore";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import AutoComplete from "primevue/autocomplete";
+
 import {
   classService,
   type ClassAutocompleteOption,
 } from "@/services/classService";
+
 import {
   teacherService,
   type TeacherAutocompleteOption,
 } from "@/services/teacherService";
+
 import {
   subjectService,
   type SubjectAutocompleteOption,
@@ -23,6 +26,7 @@ const router = useRouter();
 const route = useRoute();
 
 const isSubmitting = ref(false);
+const showSkeleton = ref(true);
 
 const form = ref({
   id: "" as string | number,
@@ -31,13 +35,12 @@ const form = ref({
   period_duration: "",
   instructor: "" as any,
   subject: "" as any,
- 
 });
 
 const startTime = ref("");
 const endTime = ref("");
 
-// Autocomplete Logic
+/* Autocomplete */
 const filteredClasses = ref<ClassAutocompleteOption[]>([]);
 const searchClass = async (event: any) => {
   filteredClasses.value = await classService.autocompleteClasses(event.query);
@@ -57,54 +60,73 @@ const searchSubject = async (event: any) => {
   );
 };
 
+/* Load Detail + Skeleton Delay */
 onMounted(async () => {
   const id = route.params.id as string;
-  const detail = await store.fetchDetail(id);
-  if (detail) {
-    if (detail.period_duration) {
-      const times = detail.period_duration.split(" - ");
-      startTime.value = times[0] || "";
-      endTime.value = times[1] || "";
-    }
-    form.value = {
-      id: detail.id as string | number,
-      class_name: detail.class_name ? { name: detail.class_name } : "",
-      day: detail.day,
-      period_duration: detail.period_duration,
-      instructor: detail.instructor ? { name: detail.instructor } : "",
-      subject: detail.subject ? { name: detail.subject } : "",
-     
-    };
-  } else {
+
+  const fetchPromise = store.fetchDetail(id);
+
+  // Skeleton minimal 1 detik
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  const detail = await fetchPromise;
+
+  showSkeleton.value = false;
+
+  if (!detail) {
     router.push("/schedules");
+    return;
   }
+
+  if (detail.period_duration) {
+    const times = detail.period_duration.split(" - ");
+    startTime.value = times[0] || "";
+    endTime.value = times[1] || "";
+  }
+
+  form.value = {
+    id: detail.id as string | number,
+    class_name: detail.class_name ? { name: detail.class_name } : "",
+    day: detail.day,
+    period_duration: detail.period_duration,
+    instructor: detail.instructor ? { name: detail.instructor } : "",
+    subject: detail.subject ? { name: detail.subject } : "",
+  };
 });
 
+/* Navigation */
 const goBack = () => {
   router.push("/schedules");
 };
 
+/* Submit */
 const handleSubmit = async () => {
   try {
     isSubmitting.value = true;
-    const { id, ...putPayloadTemp } = form.value;
-    const putPayload = {
-      ...putPayloadTemp,
+
+    const { id, ...payloadTemp } = form.value;
+
+    const payload = {
+      ...payloadTemp,
       class_name:
-        typeof putPayloadTemp.class_name === "object"
-          ? (putPayloadTemp.class_name as any).name
-          : putPayloadTemp.class_name,
+        typeof payloadTemp.class_name === "object"
+          ? payloadTemp.class_name.name
+          : payloadTemp.class_name,
+
       period_duration: `${startTime.value} - ${endTime.value}`,
+
       instructor:
-        typeof putPayloadTemp.instructor === "object"
-          ? (putPayloadTemp.instructor as any).name
-          : putPayloadTemp.instructor,
+        typeof payloadTemp.instructor === "object"
+          ? payloadTemp.instructor.name
+          : payloadTemp.instructor,
+
       subject:
-        typeof putPayloadTemp.subject === "object"
-          ? (putPayloadTemp.subject as any).name
-          : putPayloadTemp.subject,
+        typeof payloadTemp.subject === "object"
+          ? payloadTemp.subject.name
+          : payloadTemp.subject,
     };
-    await store.updateItem(id, putPayload);
+
+    await store.updateItem(id, payload);
     router.push("/schedules");
   } catch (error: any) {
     alert(error.message || "An error occurred");
@@ -113,6 +135,7 @@ const handleSubmit = async () => {
   }
 };
 
+/* Text */
 const i18n = {
   brand: "SCHOOL",
   version: "V3",
@@ -161,14 +184,45 @@ const i18n = {
         data-aos="fade-up"
       >
         <!-- Skeleton Loader -->
-        <div v-if="store.loadingDetail" class="animate-pulse space-y-6">
-          <div class="h-10 bg-base-200 rounded w-1/4"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-1/2"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full mt-8"></div>
+        <div v-if="showSkeleton" class="space-y-6 animate-pulse">
+          <!-- Class -->
+          <div class="space-y-2">
+            <div class="h-3 w-32 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
+          <!-- Date -->
+          <div class="space-y-2">
+            <div class="h-3 w-20 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
+          <!-- Duration -->
+          <div class="space-y-2">
+            <div class="h-3 w-24 bg-base-200 rounded"></div>
+            <div class="flex gap-3">
+              <div class="h-12 bg-base-200 rounded-xl w-full"></div>
+              <div class="h-12 bg-base-200 rounded-xl w-full"></div>
+            </div>
+          </div>
+
+          <!-- Instructor -->
+          <div class="space-y-2">
+            <div class="h-3 w-36 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
+          <!-- Subject -->
+          <div class="space-y-2">
+            <div class="h-3 w-24 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex justify-end gap-3 pt-4">
+            <div class="h-10 w-24 bg-base-200 rounded-xl"></div>
+            <div class="h-10 w-36 bg-base-200 rounded-xl"></div>
+          </div>
         </div>
 
         <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">

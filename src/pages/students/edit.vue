@@ -7,61 +7,85 @@ import { useRouter, useRoute } from "vue-router";
 import { classService, type ClassAutocompleteOption } from "@/services/classService";
 import AutoComplete from "primevue/autocomplete";
 
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 const store = useStudentStore();
 const router = useRouter();
 const route = useRoute();
+
 const isSubmitting = ref(false);
+const showSkeleton = ref(true);
 
 const form = ref({
-  id: '' as string | number,
+  id: "" as string | number,
   name: "",
   nis: "",
   gender: "Male",
   class_name: "",
 });
 
-// Autocomplete Logic
+/* Autocomplete */
 const filteredClasses = ref<ClassAutocompleteOption[]>([]);
+
 const searchClass = async (event: any) => {
-  const query = event.query;
-  filteredClasses.value = await classService.autocompleteClasses(query);
+  filteredClasses.value = await classService.autocompleteClasses(event.query);
 };
 
 onMounted(async () => {
+  AOS.init({
+    duration: 700,
+    easing: "ease-out-cubic",
+    once: true,
+  });
+
   const id = route.params.id as string;
-  const detail = await store.fetchDetail(id);
-  if (detail) {
-    form.value = { 
-      id: detail.id as string | number, 
-      name: detail.name, 
-      nis: detail.nis, 
-      gender: detail.gender, 
-      class_name: detail.class_name, 
-    };
-  } else {
-    router.push('/students');
+
+  const fetchPromise = store.fetchDetail(id);
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const detail = await fetchPromise;
+
+  showSkeleton.value = false;
+
+  if (!detail) {
+    router.push("/students");
+    return;
   }
+
+  form.value = {
+    id: detail.id as string | number,
+    name: detail.name,
+    nis: detail.nis,
+    gender: detail.gender,
+    class_name: detail.class_name,
+  };
 });
 
 const goBack = () => {
-  router.push('/students');
+  router.push("/students");
 };
 
 const handleSubmit = async () => {
   try {
     isSubmitting.value = true;
+
     const finalPayload = {
       ...form.value,
-      class_name: typeof form.value.class_name === 'object' 
-          ? (form.value.class_name as any).name 
-          : form.value.class_name
+      class_name:
+        typeof form.value.class_name === "object"
+          ? (form.value.class_name as any).name
+          : form.value.class_name,
     };
 
     const { id, ...putPayload } = finalPayload;
+
     await store.updateItem(id, putPayload);
-    router.push('/students');
+
+    router.push("/students");
   } catch (error: any) {
-    alert(error.message || 'An error occurred');
+    alert(error.message || "An error occurred");
   } finally {
     isSubmitting.value = false;
   }
@@ -72,11 +96,11 @@ const i18n = {
   version: "V3",
   header: {
     title: "Edit Student",
-    subtitle: "Modify student profile and academic status."
+    subtitle: "Modify student profile and academic status.",
   },
   actions: {
-    back: "Back to List"
-  }
+    back: "Back to List",
+  },
 };
 </script>
 
@@ -85,74 +109,157 @@ const i18n = {
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
 
     <div class="drawer-content flex flex-col p-6 lg:p-10">
-      <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10" data-aos="fade-down">
+
+      <!-- HEADER -->
+      <header
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10"
+        data-aos="fade-down"
+      >
         <div>
-          <h1 class="text-4xl font-extrabold tracking-tight text-base-content mb-2">
+          <h1 class="text-4xl font-extrabold mb-2">
             {{ i18n.header.title }}
           </h1>
-          <p class="text-base-content/40 font-medium">
+
+          <p class="text-base-content/40">
             {{ i18n.header.subtitle }}
           </p>
         </div>
-        <div class="flex items-center gap-3">
-          <button @click="goBack" class="btn btn-ghost rounded-xl px-6 font-bold gap-2 capitalize">
-            <Icon icon="lucide:arrow-left" class="text-sm" />
-            {{ i18n.actions.back }}
-          </button>
-        </div>
+
+        <button
+          @click="goBack"
+          class="btn btn-ghost rounded-xl px-6 font-bold gap-2"
+        >
+          <Icon icon="lucide:arrow-left" class="text-sm" />
+          {{ i18n.actions.back }}
+        </button>
       </header>
 
-      <div class="bg-base-100 backdrop-blur-xl shadow-2xl border border-base-content/5 rounded-[2.5rem] p-8 max-w-3xl" data-aos="fade-up">
-        <div v-if="store.loadingDetail" class="animate-pulse space-y-6">
-          <div class="h-10 bg-base-200 rounded w-1/4"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-1/2"></div>
-          <div class="h-12 bg-base-200 rounded-xl w-full mt-8"></div>
+      <!-- FORM CARD -->
+      <div
+        class="bg-base-100 shadow-2xl border rounded-[2.5rem] p-8 max-w-3xl"
+        data-aos="fade-up"
+        data-aos-delay="150"
+      >
+
+        <!-- Skeleton -->
+        <div v-if="showSkeleton" class="space-y-6 animate-pulse">
+
+          <div class="space-y-2">
+            <div class="h-3 w-24 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="h-3 w-20 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="h-3 w-20 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="h-3 w-28 bg-base-200 rounded"></div>
+            <div class="h-12 bg-base-200 rounded-xl"></div>
+          </div>
+
         </div>
-        
-        <form v-else @submit.prevent="handleSubmit" class="flex flex-col gap-5">
+
+        <!-- FORM -->
+        <form
+          v-else
+          @submit.prevent="handleSubmit"
+          class="flex flex-col gap-5"
+        >
+
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Name</span></label>
-            <input v-model="form.name" type="text" class="input input-bordered focus:border-secondary rounded-xl" required placeholder="Jane Doe" />
+            <label class="label">
+              <span class="label-text font-bold">Name</span>
+            </label>
+
+            <input
+              v-model="form.name"
+              type="text"
+              class="input input-bordered rounded-xl"
+              required
+            />
           </div>
+
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">NIS</span></label>
-            <input v-model="form.nis" type="text" class="input input-bordered focus:border-secondary rounded-xl" required placeholder="12345678" />
+            <label class="label">
+              <span class="label-text font-bold">NIS</span>
+            </label>
+
+            <input
+              v-model="form.nis"
+              type="text"
+              class="input input-bordered rounded-xl"
+              required
+            />
           </div>
+
           <div class="form-control">
-            <label class="label"><span class="label-text font-bold">Gender</span></label>
-            <select v-model="form.gender" class="select select-bordered focus:border-secondary rounded-xl" required>
+            <label class="label">
+              <span class="label-text font-bold">Gender</span>
+            </label>
+
+            <select
+              v-model="form.gender"
+              class="select select-bordered rounded-xl"
+              required
+            >
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
           </div>
-          <div class="form-control flex flex-col pt-1">
-            <label class="label"><span class="label-text font-bold">Class Name</span></label>
-            <AutoComplete 
-              v-model="form.class_name" 
-              :suggestions="filteredClasses" 
-              @complete="searchClass" 
-              optionLabel="name" 
-              placeholder="Search Class (min. 3 chars)"
-              :delay="300"
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-bold">Class Name</span>
+            </label>
+
+            <AutoComplete
+              v-model="form.class_name"
+              :suggestions="filteredClasses"
+              @complete="searchClass"
+              optionLabel="name"
+              placeholder="Search Class"
               class="w-full"
-              inputClass="input input-bordered focus:border-secondary rounded-xl w-full"
-              panelClass="bg-base-100 border shadow-xl rounded-xl mt-1 z-50 text-sm menu p-2"
+              inputClass="input input-bordered rounded-xl w-full"
             />
           </div>
-          <div class="form-actions mt-6 flex justify-end gap-3">
-            <button type="button" class="btn btn-ghost rounded-xl font-bold" @click="goBack" :disabled="isSubmitting">Cancel</button>
-            <button type="submit" class="btn btn-secondary rounded-xl font-bold px-8 shadow-lg shadow-secondary/20" :disabled="isSubmitting">
-              <span v-if="isSubmitting" class="loading loading-spinner loading-sm"></span>
+
+          <div class="flex justify-end gap-3 mt-6">
+
+            <button
+              type="button"
+              class="btn btn-ghost rounded-xl"
+              @click="goBack"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              class="btn btn-secondary rounded-xl px-8"
+              :disabled="isSubmitting"
+            >
+              <span
+                v-if="isSubmitting"
+                class="loading loading-spinner loading-sm"
+              ></span>
+
               Save Updates
             </button>
+
           </div>
+
         </form>
+
       </div>
     </div>
+
     <Sidebar />
   </div>
 </template>
