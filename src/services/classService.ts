@@ -20,8 +20,10 @@ export const classService = {
     return response.data.data || response.data;
   },
   async getById(id: number | string): Promise<ClassType> {
-    const response = await apiClient.get(`/classes/${id}`);
-    return response.data.data || response.data;
+    const all = await this.getAll();
+    const item = all.find(i => String(i.id) === String(id));
+    if (!item) throw new Error(`Class with id ${id} not found`);
+    return item;
   },
   async create(payload: Omit<ClassType, 'id'>) {
     const response = await apiClient.post('/classes', payload);

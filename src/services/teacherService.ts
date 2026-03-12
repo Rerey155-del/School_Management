@@ -21,8 +21,10 @@ export const teacherService = {
     return response.data.data || response.data;
   },
   async getById(id: number | string): Promise<TeacherType> {
-    const response = await apiClient.get(`/teachers/${id}`);
-    return response.data.data || response.data;
+    const all = await this.getAll();
+    const item = all.find(i => String(i.id) === String(id));
+    if (!item) throw new Error(`Teacher with id ${id} not found`);
+    return item;
   },
   async create(payload: Omit<TeacherType, 'id'>) {
     const response = await apiClient.post('/teachers', payload);

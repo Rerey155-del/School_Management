@@ -117,15 +117,15 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   const { isAuthenticated } = useAuth()
   
   if (to.meta.requiresAuth && !isAuthenticated.value) {
-    next('/login')
-  } else if (to.path === '/login' && isAuthenticated.value) {
-    next('/')
-  } else {
-    next()
+    return '/login'
+  }
+  
+  if (to.path === '/login' && isAuthenticated.value) {
+    return '/'
   }
 })
 

@@ -20,9 +20,10 @@ export const subjectService = {
     return response.data.data || response.data;
   },
   async getById(id: number | string): Promise<SubjectType> {
-    const response = await apiClient.get(`/subjects/${id}`);
-    // Handle wrapped response if necessary, otherwise return response.data
-    return response.data.data || response.data;
+    const all = await this.getAll();
+    const item = all.find(i => String(i.id) === String(id));
+    if (!item) throw new Error(`Subject with id ${id} not found`);
+    return item;
   },
   async create(payload: Omit<SubjectType, 'id'>) {
     const response = await apiClient.post('/subjects', payload);

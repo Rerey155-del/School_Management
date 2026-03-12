@@ -20,13 +20,10 @@ export const studentService = {
     }));
   },
   async getById(id: number | string): Promise<StudentType> {
-    const response = await apiClient.get(`/students/${id}`);
-    const s = response.data.data || response.data;
-    return {
-      ...s,
-      class_name: s.class_name || '-',
-      enrollment_status: s.enrollment_status || 'Active'
-    };
+    const all = await this.getAll();
+    const s = all.find(i => String(i.id) === String(id));
+    if (!s) throw new Error(`Student with id ${id} not found`);
+    return s;
   },
   async create(payload: Omit<StudentType, 'id'>) {
     const response = await apiClient.post('/students', payload);
