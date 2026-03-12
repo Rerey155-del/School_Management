@@ -16,9 +16,7 @@ const openAddForm = () => {
   router.push('/students/add');
 };
 
-const openEditForm = (id: number | string) => {
-  router.push(`/students/edit/${id}`);
-};
+
 
 const isStatusActive = (status: string | undefined) => {
   if (!status) return false;
@@ -213,11 +211,11 @@ const prevPage = () => {
                 <td class="pr-12 py-10 text-right">
                   <div class="flex justify-end items-center gap-3">
                     <router-link
-                      :to="`/students/edit/${student.id}`"
-                      class="btn btn-ghost btn-sm btn-circle text-base-content hover:bg-primary/10 hover:text-primary transition-all relative z-10 pointer-events-auto"
+                      :to="{ name: 'students-edit', params: { id: student.id } }"
+                      class="btn btn-ghost btn-sm btn-circle text-base-content hover:bg-primary/10 hover:text-primary transition-all relative z-10"
                       title="Edit Student"
                     >
-                      <Icon icon="lucide:edit-3" class="w-4 h-4 pointer-events-none" />
+                      <Icon icon="lucide:edit-3" class="w-4 h-4" />
                     </router-link>
                     <!-- Status Toggle Switch -->
                     <input 
