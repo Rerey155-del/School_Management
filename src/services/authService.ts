@@ -16,28 +16,21 @@ export const authService = {
 
   async login(credentials: { username: string; password?: string }): Promise<{ user: UserType, token: string }> {
     try {
-
-      const usersResponse = await apiClient.get('/users');
-      const users: UserType[] = usersResponse.data;
-
-      const matchedUser = users.find(u => {
-        // If the backend has a password field, check it. Otherwise require a default mock password.
-        const dbPassword = (u as any).password || 'admin123';
-        return u.username === credentials.username && credentials.password === dbPassword;
-      });
-
-      if (matchedUser) {
+      // Mengirim request POST ke endpoint login real di backend
+      const response = await apiClient.post('/users/login', credentials);
+      
+      if (response.data && response.data.token) {
+        const { user, token } = response.data;
         return {
           user: {
-            ...matchedUser,
-            role: matchedUser.role || 'Administrator',
-            avatar: matchedUser.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${matchedUser.username}`
+            ...user,
+            role: user.role || 'Admin',
+            avatar: user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`
           },
-          // Mock token, ganti dengan token dari API jika /users me-return token
-          token: 'mock-token-from-users-table'
+          token: token
         };
       } else {
-        throw new Error('User not found in /users table');
+        throw new Error('Respons login tidak valid');
       }
     } catch (error: any) {
       console.error('Login error:', error);

@@ -103,11 +103,11 @@ const i18n = computed(() => {
           </div>
 
           <div class="hidden md:block px-4 text-right">
-            <p class="text-sm font-bold">{{ user?.full_name || user?.username }}</p>
+            <p class="text-sm font-bold">{{ user?.full_name || user?.username || 'Admin' }}</p>
             <p
               class="text-xs text-base-content/50 uppercase tracking-widest font-bold"
             >
-              {{ user?.role || i18n.user.role }}
+              {{ user?.role || 'Administrator' }}
             </p>
           </div>
           <div class="dropdown dropdown-end">
