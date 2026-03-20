@@ -44,6 +44,27 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
+     * Registers a new user and authenticates them immediately.
+     */
+    async register(data: { full_name: string; username: string; email: string; password?: string; role?: string }): Promise<boolean> {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await authService.register(data);
+        this.user = response.user;
+        localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('token', response.token);
+        return true;
+      } catch (err: any) {
+        this.error = err.message || 'Registration failed';
+        console.error('AuthStore[register]:', err);
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /**
      * Clears the user session data.
      */
     logout() {

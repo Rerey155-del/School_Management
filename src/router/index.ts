@@ -9,6 +9,12 @@ const routes = [
         meta: { title: 'Login' }
     },
     {
+        path: '/register',
+        name: 'register',
+        component: () => import('@/pages/register/index.vue'),
+        meta: { title: 'Register' }
+    },
+    {
         path: '/',
         name : 'dashboard',
         component: () => import('@/pages/dashboard/index.vue'),

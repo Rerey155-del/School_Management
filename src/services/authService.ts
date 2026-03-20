@@ -35,5 +35,28 @@ export const authService = {
       console.error('Login error:', error);
       throw error;
     }
+  },
+
+  async register(data: { full_name: string; username: string; email: string; password?: string; role?: string }): Promise<{ user: UserType, token: string }> {
+    try {
+      // Endpoint backend adalah POST /users, dan ia mengembalikan token JWT juga (dibuat di backend)
+      const response = await apiClient.post('/users', { ...data, status: 'Aktif' });
+      
+      if (response.data && response.data.token) {
+        const { user, token } = response.data;
+        return {
+          user: {
+            ...user,
+            avatar: user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`
+          },
+          token: token
+        };
+      } else {
+        throw new Error('Respons register tidak valid');
+      }
+    } catch (error: any) {
+      console.error('Register error:', error);
+      throw error;
+    }
   }
 };

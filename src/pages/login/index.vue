@@ -151,7 +151,7 @@ const handleLogin = async () => {
             <input type="checkbox" class="checkbox checkbox-primary checkbox-xs border-base-content/20 bg-base-content/5" />
             <span class="text-xs font-bold text-base-content/40 group-hover:text-base-content/60 transition-colors">{{ i18n.labels.remember }}</span>
           </label>
-          <a href="#" class="text-xs font-bold text-primary hover:underline underline-offset-4">{{ i18n.labels.forgot }}</a>
+          <router-link to="/register" class="text-xs font-bold text-primary hover:underline underline-offset-4">{{ i18n.labels.forgot }}</router-link>
         </div>
 
         <button

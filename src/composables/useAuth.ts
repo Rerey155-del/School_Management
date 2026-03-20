@@ -8,6 +8,7 @@ export function useAuth() {
     user: computed(() => store.user),
     isAuthenticated: computed(() => store.isAuthenticated),
     login: store.login,
+    register: store.register,
     logout: store.logout,
     loading: computed(() => store.loading),
     error: computed(() => store.error)
