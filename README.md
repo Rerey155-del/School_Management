@@ -1,213 +1,130 @@
-# 🎨 Guru App (Frontend)
+# Manajemen Sekolah V3 (School Management System)
 
-Frontend aplikasi **Manajemen Data Guru** yang dibuat menggunakan **Vue 3** dan terhubung dengan **REST API Spring Boot**.
-
-Aplikasi ini memungkinkan pengguna untuk:
-
-- Login ke sistem
-- Melihat daftar guru
-- Menambahkan data guru
-- Mengedit data guru
-- Mengubah status guru (Aktif / Non-Aktif)
-
-⚠️ Catatan:  
-Sesuai requirement tugas, **tidak ada fitur delete data guru**.
+Sistem Informasi Manajemen Sekolah berbasis web modern yang dibangun menggunakan arsitektur pemisahan *Frontend* dan *Backend* (Decoupled Architecture). Sistem ini dirancang untuk mengelola berbagai entitas sekolah seperti Guru, Siswa, Kelas, Mata Pelajaran, Jadwal, hingga Log Aktivitas dan Sistem Pengumuman terpusat yang memanfaatkan teknologi **Apache Kafka**.
 
 ---
 
-# ⚙️ Teknologi yang Digunakan
+## 💻 Tech Stack
 
-- Vue 3
-- Vue Router
-- Tailwind CSS
-- DaisyUI
-- Fetch API
-- Vite
-
----
-
-# 🗂️ Struktur Project
-
-```
-guru-app
-│
-├── public
-│
-├── src
-│   │
-│   ├── assets
-│   │   └── main.css
-│   │
-│   ├── components
-│   │
-│   ├── router
-│   │   └── index.ts
-│   │
-│   ├── views
-│   │   ├── Login.vue
-│   │   ├── Dashboard.vue
-│   │   └── GuruForm.vue
-│   │
-│   ├── App.vue
-│   └── main.ts
-│
-└── package.json
-```
+- **Frontend:** Vue.js 3, Vite, Pinia (State Management), TailwindCSS, DaisyUI.
+- **Backend:** Node.js, Express.js.
+- **Database:** MySQL.
+- **Message Broker / Queue:** Apache Kafka.
+- **Security & Auth:** JSON Web Token (JWT), BcryptJS.
 
 ---
 
-# 🛠️ Setup Project
+## 🌟 Fitur Utama
 
-## 1️⃣ Clone Repository
-
-```bash
-git clone https://github.com/username/guru-app.git
-cd guru-app
-```
-
----
-
-## 2️⃣ Install Dependencies
-
-```bash
-npm install
-```
+1. **Dashboard Analytics:** Ringkasan statistik, event interaktif, dan grafik data akademik.
+2. **Role-based Authentication:** Login dan Register yang dilengkapi dengan enkripsi password dan JWT. Role yang didukung: *Super Admin, Admin, Guru, Siswa*.
+3. **Data Master Management:** CRUD (Create, Read, Update, Delete) lengkap untuk Guru, Siswa, Mata Pelajaran, dan Kelas.
+4. **Academic Scheduling:** Pengaturan jadwal pelajaran berbasis kelas.
+5. **Real-time Announcements (Kafka):** Sistem pengumuman berskala besar yang dikelola melalui asinkronasi Apache Kafka.
+6. **Audit Logs:** Pencatatan otomatis untuk setiap tindakan (Create/Update/Delete) yang dilakukan pengguna di sistem.
 
 ---
 
-## 3️⃣ Jalankan Frontend
+## ⚙️ Persyaratan Sistem (Prerequisites)
 
-```bash
-npm run dev
-```
+Sebelum menjalankan aplikasi, pastikan Anda telah menginstal aplikasi berikut di sistem operasi Anda:
 
-Aplikasi akan berjalan di:
-
-```
-http://localhost:5173
-```
+1. **Node.js** (v16 atau lebih baru)
+2. **MySQL** / XAMPP Database
+3. **Apache Kafka & Zookeeper** (Untuk fitur Broadcast Pengumuman)
 
 ---
 
-# 🔗 Koneksi ke Backend
+## 🚀 Cara Instalasi & Menjalankan Aplikasi
 
-Frontend terhubung dengan backend Spring Boot melalui REST API.
+Aplikasi ini dibagi menjadi 2 folder utama:
+- `manajemen-guru` (Frontend)
+- `guru-express-api` (Backend)
 
-Contoh endpoint:
+### 1. Setup Backend (`guru-express-api`)
+1. Buka terminal dan masuk ke folder API:
+   ```bash
+   cd c:\xampp\htdocs\test_program\guru-express-api
+   ```
+2. Instal semua dependensi:
+   ```bash
+   npm install
+   ```
+3. Buat database `guru_express_api` di MySQL (lewat phpMyAdmin atau terminal).
+4. *Import* file `database.sql` ke dalam database tersebut.
+5. Sesuaikan konfigurasi di file `.env`:
+   ```env
+   PORT=5002
+   JWT_SECRET=rahasia_anda_disini
+   KAFKA_BROKER=localhost:9092
+   ```
+6. Jalankan server:
+   ```bash
+   npm run dev
+   ```
 
-```
-http://localhost:8083/api/teachers
-```
-
----
-
-# 🔐 Authentication
-
-Aplikasi menggunakan **Basic Authentication** untuk mengakses API.
-
-Contoh implementasi di Vue:
-
-```javascript
-const username = "admin"
-const password = "admin123"
-
-const token = btoa(`${username}:${password}`)
-
-fetch("http://localhost:8083/api/teachers", {
-  method: "GET",
-  headers: {
-    Authorization: `Basic ${token}`
-  }
-})
-```
-
----
-
-# 📄 Halaman Aplikasi
-
-## 1️⃣ Login Page
-
-Halaman login untuk masuk ke dalam sistem.
-
-User harus memasukkan:
-
-- Username
-- Password
-
-Jika berhasil login, user akan diarahkan ke halaman **Dashboard**.
-
----
-
-## 2️⃣ Dashboard
-
-Menampilkan daftar guru dalam bentuk tabel.
-
-Informasi yang ditampilkan:
-
-- Nama Guru
-- Mata Pelajaran
-- Status (Aktif / Non-Aktif)
-
-Fitur:
-
-- Edit data guru
-- Navigasi ke halaman tambah guru
+### 2. Setup Frontend (`manajemen-guru`)
+1. Buka terminal baru dan masuk ke folder frontend:
+   ```bash
+   cd c:\xampp\htdocs\manajemen-guru
+   ```
+2. Instal dependensi:
+   ```bash
+   npm install
+   ```
+3. Pastikan endpoint API di `.env` frontend sudah mengarah ke backend:
+   ```env
+   VITE_API_BASE_URL="http://localhost:5002/api"
+   ```
+4. Jalankan aplikasi web:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## 3️⃣ Form Tambah Guru
+## 📨 Panduan Penggunaan Apache Kafka (Sistem Pengumuman)
 
-Digunakan untuk menambahkan data guru baru.
+Aplikasi ini menggunakan teknologi **Apache Kafka** untuk menangani pertukaran pesan (Message Queue) berskala besar, spesifik pada fitur **Announcements / Pengumuman Terpusat**.
 
-Field yang tersedia:
+### Kenapa menggunakan Kafka?
+Saat administrator mengirim Broadcast Pengumuman ke ribuan siswa atau guru, mengirimkan notifikasi satu-per-satu lewat HTTP akan membebani server dan membuat aplikasi melambat. Dengan Kafka, server hanya "melempar" pesan Pengumuman ke antrean Kafka (sebagai *Producer*), lalu Kafka akan mengurus penyebarannya di latar belakang (lewat *Consumer*) tanpa mengganggu kinerja utama aplikasi.
 
-- Nama Guru
-- Mata Pelajaran
-- Status Aktif
+### Cara Menjalankan Kafka di Local (Windows)
+Sistem ini tidak akan bisa mengirim Pengumuman jika Kafka Service dalam kondisi mati. Berikut cara menghidupkannya:
 
----
+1. Download Apache Kafka dan ekstrak foldernya (contoh: `c:\kafka`).
+2. **Buka Terminal 1 (Jalankan Zookeeper):**
+   ```bash
+   cd c:\kafka
+   .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+   ```
+3. **Buka Terminal 2 (Jalankan Kafka Server):**
+   ```bash
+   cd c:\kafka
+   .\bin\windows\kafka-server-start.bat .\config\server.properties
+   ```
 
-## 4️⃣ Edit Guru
+### Alur Kerja Kafka di Aplikasi Ini
 
-Digunakan untuk mengubah data guru yang sudah ada.
-
-User dapat:
-
-- Mengubah nama
-- Mengubah mata pelajaran
-- Mengubah status aktif / non aktif
-
----
-
-# 🔄 Alur Sistem
-
-1. User membuka aplikasi frontend.
-2. User diarahkan ke halaman **Login**.
-3. User memasukkan username dan password.
-4. Setelah login berhasil, user masuk ke halaman **Dashboard**.
-5. Dashboard menampilkan daftar guru.
-6. User dapat:
-   - Menambahkan guru
-   - Mengedit data guru
-   - Mengubah status guru.
+1. **Topik (Topic):** Aplikasi kita membaca dan menulis di sebuah topik Kafka bernama `announcements`.
+2. **Producer (`backend/src/config/kafka.js`):**
+   Setiap kali Admin menekan tombol "Kirim Pengumuman" di halaman *Add Announcement* pada frontend, Node.js (`announcementController.js`) akan bertindak sebagai *Producer*. Ia akan mengemas pesan tesebut ke dalam JSON log lalu mengirimkannya ke *broker* Kafka ke dalam topik `announcements`.
+3. **Consumer (`backend/src/index.js`):**
+   Di saat Backend Node.js dijalankan (`npm run dev`), sistem secara otomatis menjalankan sebuah *Consumer* di latar belakang (`runConsumer('announcements')`). Consumer ini akan selalu bersiap sedia memantau (listen) antrean pesan. Jika ada pesan masuk dari Producer, Consumer membedahnya dan menyimpannya ke database untuk kemudian ditampilkan di halaman *List Pengumuman* Frontend.
 
 ---
 
-# 🚫 Batasan Sistem
+## 🔐 Alur Autentikasi (JWT)
 
-Sesuai requirement tugas:
+Aplikasi ini menggunakan standar **JSON Web Token (JWT)** yang *stateless* untuk keamanan API.
 
-- ❌ Tidak ada fitur delete guru
-- ❌ Tidak ada penghapusan data
-- ✔ Hanya **Create, Read, Update**
+### Proses Kerja JWT
+1. **Login:** Ketika pengguna memasukkan Username dan Password di frontend, `authService.ts` akan mengirimnya ke API (`POST /api/users/login`).
+2. **Validasi & Token Generation:** Backend mencocokkan password (menggunakan algoritma *Hashing Bcrypt*). Jika cocok, Node.js (`userController.js`) membangun sebuah Token JWT rahasia berisi informasi dasar pengguna (seperti `id` dan `role`).
+3. **Penyimpanan:** Frontend (Vue.js + Pinia Store) menerima token ini dan menyimpannya secara aman di `localStorage` peramban web.
+4. **Otorisasi API:** Saat frontend ingin mengambil data sensitif (misal data Guru atau Sistem Log), ia akan meyisipkan JWT ini ke dalam *Headers Authorization* `Bearer <token>`.
+5. **Autentikasi Middleware:** Di sisi backend, sebuah pelindung (middleware `verifyToken`) akan memverifikasi keaslian token sebelum mengizinkan data diakses.
 
 ---
-
-# 👤 Author
-
-Frontend dibuat menggunakan:
-
-- Vue 3
-- Tailwind CSS
-- DaisyUI
-- REST API Integration
+*Dibuat untuk keperluan Manajemen Sekolah V3. All rights reserved 2026.*
