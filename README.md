@@ -37,33 +37,9 @@ Sebelum menjalankan aplikasi, pastikan Anda telah menginstal aplikasi berikut di
 
 ## 🚀 Cara Instalasi & Menjalankan Aplikasi
 
-Aplikasi ini dibagi menjadi 2 folder utama:
-- `manajemen-guru` (Frontend)
-- `guru-express-api` (Backend)
+Pastikan backend API sudah berjalan di lokal Anda sebelum menjalankan *frontend* ini. 
+Berikut cara menginstal dan menjalankan *frontend* Manajemen Sekolah:
 
-### 1. Setup Backend (`guru-express-api`)
-1. Buka terminal dan masuk ke folder API:
-   ```bash
-   cd c:\xampp\htdocs\test_program\guru-express-api
-   ```
-2. Instal semua dependensi:
-   ```bash
-   npm install
-   ```
-3. Buat database `guru_express_api` di MySQL (lewat phpMyAdmin atau terminal).
-4. *Import* file `database.sql` ke dalam database tersebut.
-5. Sesuaikan konfigurasi di file `.env`:
-   ```env
-   PORT=5002
-   JWT_SECRET=rahasia_anda_disini
-   KAFKA_BROKER=localhost:9092
-   ```
-6. Jalankan server:
-   ```bash
-   npm run dev
-   ```
-
-### 2. Setup Frontend (`manajemen-guru`)
 1. Buka terminal baru dan masuk ke folder frontend:
    ```bash
    cd c:\xampp\htdocs\manajemen-guru
@@ -72,7 +48,7 @@ Aplikasi ini dibagi menjadi 2 folder utama:
    ```bash
    npm install
    ```
-3. Pastikan endpoint API di `.env` frontend sudah mengarah ke backend:
+3. Pastikan endpoint API di `.env` frontend sudah mengarah ke layanan backend:
    ```env
    VITE_API_BASE_URL="http://localhost:5002/api"
    ```
@@ -91,19 +67,22 @@ Aplikasi ini menggunakan teknologi **Apache Kafka** untuk menangani pertukaran p
 Saat administrator mengirim Broadcast Pengumuman ke ribuan siswa atau guru, mengirimkan notifikasi satu-per-satu lewat HTTP akan membebani server dan membuat aplikasi melambat. Dengan Kafka, server hanya "melempar" pesan Pengumuman ke antrean Kafka (sebagai *Producer*), lalu Kafka akan mengurus penyebarannya di latar belakang (lewat *Consumer*) tanpa mengganggu kinerja utama aplikasi.
 
 ### Cara Menjalankan Kafka di Local (Windows)
-Sistem ini tidak akan bisa mengirim Pengumuman jika Kafka Service dalam kondisi mati. Berikut cara menghidupkannya:
+Sistem ini tidak akan bisa mengirim Pengumuman jika Kafka Service dalam kondisi mati. 
 
-1. Download Apache Kafka dan ekstrak foldernya (contoh: `c:\kafka`).
-2. **Buka Terminal 1 (Jalankan Zookeeper):**
+Jika Anda menggunakan **Apache Kafka terbaru (dengan fitur KRaft)** yang tidak lagi membutuhkan Zookeeper, ikuti panduan ini:
+
+1. Pastikan Anda sudah mengatur *Cluster ID* pada Kafka Anda (hanya dilakukan sekali saat awal instalasi Kafka).
+2. **Buka Terminal 1 (Jalankan Controller):**
+   ```bash
+   cd c:\kafka (atur sesuai folder Kafka Anda)
+   .\bin\windows\kafka-server-start.bat .\config\controller.properties
+   ```
+3. **Buka Terminal 2 (Jalankan Broker):**
    ```bash
    cd c:\kafka
-   .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+   .\bin\windows\kafka-server-start.bat .\config\broker.properties
    ```
-3. **Buka Terminal 2 (Jalankan Kafka Server):**
-   ```bash
-   cd c:\kafka
-   .\bin\windows\kafka-server-start.bat .\config\server.properties
-   ```
+*(Catatan: Jika Anda masih menggunakan versi Kafka lama, Anda bisa menjalankan `zookeeper-server-start.bat` dan `kafka-server-start.bat config\server.properties` seperti biasa).*
 
 ### Alur Kerja Kafka di Aplikasi Ini
 
