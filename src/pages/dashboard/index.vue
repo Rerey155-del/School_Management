@@ -270,14 +270,14 @@ const i18n = computed(() => {
           </div>
         </div>
 
-        <!-- Academic Events Area -->
+        <!-- Audit Logs / Aktivitas Terbaru Area -->
         <div class="flex flex-col gap-6">
           <div 
             class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200 h-full" 
             data-aos="fade-left"
             data-aos-delay="300"
           >
-            <h3 class="text-xl font-extrabold tracking-tight mb-6">{{ i18n.widgets.events }}</h3>
+            <h3 class="text-xl font-extrabold tracking-tight mb-6">{{ i18n.widgets.auditLogs }}</h3>
             
             <template v-if="store.isLoading">
                <div class="flex flex-col gap-5">
@@ -286,18 +286,27 @@ const i18n = computed(() => {
             </template>
             
             <template v-else>
-               <div class="flex flex-col gap-4">
+               <div class="flex flex-col gap-1 text-base-content/90">
                   <div 
-                    v-for="event in store.academicEvents" 
-                    :key="event.id" 
-                    class="flex flex-col gap-2 p-4 rounded-2xl border border-base-200 bg-base-50/50 hover:bg-base-200/50 transition-colors"
+                    v-for="log in store.auditLogs" 
+                    :key="log.id" 
+                    class="flex items-center gap-4 py-3 border-b border-base-200/50 last:border-0 hover:bg-base-200/20 px-4 rounded-xl transition-all"
                   >
-                    <div class="flex items-start justify-between">
-                      <span class="font-bold text-base-content/90">{{ event.title }}</span>
-                      <span :class="`badge badge-sm badge-${event.color}`">{{ event.type }}</span>
+                    <!-- Marker -->
+                    <div :class="`w-8 h-8 rounded-full bg-${log.color}/20 flex items-center justify-center shrink-0`">
+                      <div :class="`w-3 h-3 rounded-full bg-${log.color}`"></div>
                     </div>
-                    <div class="text-xs font-bold text-base-content/40 uppercase tracking-widest mt-1">
-                      <i class="fas fa-calendar-alt mr-2"></i>{{ event.date }}
+                    
+                    <!-- Content -->
+                    <div class="flex-1 min-w-0 flex flex-col justify-center">
+                      <p class="font-bold text-sm text-base-content/90 truncate">{{ log.title }}</p>
+                      <p class="text-[11px] font-medium text-base-content/50 truncate mt-0.5">{{ log.description }}</p>
+                    </div>
+
+                    <!-- Date & Time -->
+                    <div class="text-[10px] font-bold text-base-content/40 tracking-widest text-right shrink-0 font-mono flex items-center gap-1.5">
+                      {{ new Date(log.date).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) }} - 
+                      {{ new Date(log.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
                     </div>
                   </div>
                </div>
@@ -306,46 +315,7 @@ const i18n = computed(() => {
         </div>
 
       </div>
-
-      <!-- Audit Log (Recent Activities) Full Width -->
-      <div class="grid grid-cols-1 mb-10">
-          <div class="bg-base-100 rounded-[2.5rem] p-8 shadow-sm border border-base-200" data-aos="fade-up" data-aos-delay="400">
-             <h3 class="text-xl font-extrabold tracking-tight mb-6">{{ i18n.widgets.auditLogs }}</h3>
-             <template v-if="store.isLoading">
-               <div class="flex flex-col gap-4">
-                 <Skeleton v-for="i in 5" :key="i" width="100%" height="3.5rem" borderRadius="1rem" />
-               </div>
-             </template>
-             <template v-else>
-               <div class="flex flex-col gap-3">
-                 <div v-for="log in store.auditLogs" :key="log.id" class="flex gap-4 items-center p-4 rounded-xl hover:bg-base-200/50 border border-transparent hover:border-base-200 transition-colors">
-                    <div :class="[
-                      'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
-                      log.action === 'CREATE' ? 'bg-success/20 text-success' :
-                      log.action === 'UPDATE' ? 'bg-info/20 text-info' :
-                      'bg-error/20 text-error'
-                    ]">
-                      <i :class="[
-                        'fas text-sm',
-                        log.action === 'CREATE' ? 'fa-plus' :
-                        log.action === 'UPDATE' ? 'fa-pen' :
-                        'fa-trash'
-                      ]"></i>
-                    </div>
-                    <div class="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-2">
-                       <div>
-                         <p class="text-sm font-bold text-base-content">{{ log.entity }} {{ log.action }}</p>
-                         <p class="text-xs text-base-content/60">{{ log.details }}</p>
-                       </div>
-                       <div class="text-xs text-base-content/40 font-mono font-bold bg-base-200 px-3 py-1.5 rounded-lg w-fit">
-                         {{ new Date(log.timestamp).toLocaleDateString() }} - {{ new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}
-                       </div>
-                    </div>
-                 </div>
-               </div>
-             </template>
-          </div>
-      </div>
+      
     </div>
 
     <!-- Integrate Sidebar Component -->

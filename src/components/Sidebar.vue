@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { Icon } from "@iconify/vue";
 import { useAuth } from "@/composables/useAuth";
 import { useRouter, useRoute } from "vue-router";
 import { useDashboardStore } from "@/stores/useDashboardStore";
+import { systemService, MenuSection } from "@/services/systemService";
 
 const dashboardStore = useDashboardStore();
 const { logout } = useAuth();
 const router = useRouter();
 const route = useRoute();
+
+const menuSections = ref<MenuSection[]>([]);
+
+onMounted(async () => {
+  try {
+    menuSections.value = await systemService.getMenu();
+  } catch (error) {
+    console.error("Failed to load menu:", error);
+  }
+});
 
 const i18n = computed(() => {
   const isId = dashboardStore.locale === 'id';
@@ -17,36 +28,13 @@ const i18n = computed(() => {
     version: "V3",
     logout: isId ? "Keluar" : "Logout",
     menus: {
-      main: isId ? "Menu Utama" : "Main Menu",
-      academic: isId ? "Pusat Akademik" : "Academic Center",
       system: isId ? "Sistem & Preferensi" : "System & Preferences",
     },
     items: {
-      dashboard: isId ? "Dasbor" : "Dashboard",
-      teachers: isId ? "Guru" : "Teachers",
-      students: isId ? "Siswa" : "Students",
-      subjects: isId ? "Mata Pelajaran" : "Subjects",
-      classes: isId ? "Kelas" : "Classes",
-      schedules: isId ? "Jadwal" : "Schedules",
-      announcements: isId ? "Pengumuman" : "Announcements",
       settings: isId ? "Pengaturan" : "Settings",
     },
   };
 });
-
-const menuItems = computed(() => [
-  { name: i18n.value.items.dashboard, path: "/", icon: "lucide:layout-dashboard" },
-  { name: i18n.value.items.teachers, path: "/teachers", icon: "lucide:users" },
-  {
-    name: i18n.value.items.students,
-    path: "/students",
-    icon: "lucide:graduation-cap",
-  },
-  { name: i18n.value.items.subjects, path: "/subjects", icon: "lucide:book-open" },
-  { name: i18n.value.items.classes, path: "/classes", icon: "lucide:school" },
-  { name: i18n.value.items.schedules, path: "/schedules", icon: "lucide:calendar" },
-  { name: i18n.value.items.announcements, path: "/announcements", icon: "lucide:megaphone" },
-]);
 
 const isActive = (path: string) => {
   if (path === "/") return route.path === "/";
@@ -79,42 +67,28 @@ const handleLogout = () => {
         </div>
       </li>
 
-      <li
-        class="menu-title uppercase text-xs font-bold tracking-widest text-base-content/40 mt-2"
-      >
-        {{ i18n.menus.main }}
-      </li>
-      <li>
-        <router-link
-          to="/"
-          class="flex items-center gap-3 py-3"
-          :class="{
-            'active bg-primary/10 text-primary font-bold': isActive('/'),
-          }"
+      <!-- Dynamic Menu Sections -->
+      <template v-for="section in menuSections" :key="section.section">
+        <li
+          class="menu-title uppercase text-xs font-bold tracking-widest text-base-content/40 mt-6 first:mt-2"
         >
-          <Icon icon="lucide:layout-dashboard" class="w-5 h-5" />
-          <span>{{ i18n.items.dashboard }}</span>
-        </router-link>
-      </li>
+          {{ section.section }}
+        </li>
+        <li v-for="item in section.items" :key="item.path">
+          <router-link
+            :to="item.path"
+            class="flex items-center gap-3 py-3"
+            :class="{
+              'active bg-primary/10 text-primary font-bold': isActive(item.path),
+            }"
+          >
+            <Icon :icon="item.icon" class="w-5 h-5" />
+            <span>{{ item.name }}</span>
+          </router-link>
+        </li>
+      </template>
 
-      <li
-        class="menu-title uppercase text-xs font-bold tracking-widest text-base-content/40 mt-6"
-      >
-        {{ i18n.menus.academic }}
-      </li>
-      <li v-for="item in menuItems.slice(1)" :key="item.path">
-        <router-link
-          :to="item.path"
-          class="flex items-center gap-3 py-3"
-          :class="{
-            'active bg-primary/10 text-primary font-bold': isActive(item.path),
-          }"
-        >
-          <Icon :icon="item.icon" class="w-5 h-5" />
-          <span>{{ item.name }}</span>
-        </router-link>
-      </li>
-
+      <!-- Static Settings System section -->
       <li
         class="menu-title uppercase text-xs font-bold tracking-widest text-base-content/40 mt-6"
       >

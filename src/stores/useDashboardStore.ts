@@ -110,14 +110,13 @@ export const useDashboardStore = defineStore('dashboard', {
             color: colors[index % colors.length]
         }));
 
-        // Mock Audit Logs
-        this.auditLogs = [
-          { id: 101, action: 'CREATE', entity: 'User', details: 'Added new teacher John Doe', timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
-          { id: 102, action: 'UPDATE', entity: 'Schedule', details: 'Modified Math class timings', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() },
-          { id: 103, action: 'DELETE', entity: 'Student', details: 'Removed inactive student record', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() },
-          { id: 104, action: 'CREATE', entity: 'Class', details: 'Created Class 11-Science', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() },
-          { id: 105, action: 'UPDATE', entity: 'Settings', details: 'Administrator changed global locale', timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString() }
-        ];
+        try {
+          const { systemService } = await import('@/services/systemService');
+          this.auditLogs = await systemService.getRecentActivity();
+        } catch (error) {
+          console.error("Failed to fetch recent activity:", error);
+          this.auditLogs = [];
+        }
 
         // Mock chart configuration
         this.chartData = {
