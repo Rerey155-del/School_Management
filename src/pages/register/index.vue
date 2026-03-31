@@ -75,11 +75,11 @@ const handleRegister = async () => {
     
     if (success) {
       successMessage.value = dashboardStore.locale === 'id'
-        ? "Pendaftaran berhasil! Mengalihkan ke Dashboard..."
-        : "Registration successful! Redirecting to Dashboard...";
+        ? "Pendaftaran berhasil! Mengalihkan ke Login..."
+        : "Registration successful! Redirecting to Login...";
       
-      // Auto login dan pindah ke dashboard
-      setTimeout(() => router.push("/"), 1500);
+      // Pindah ke login (sesuai permintaan, tidak auto login)
+      setTimeout(() => router.push("/login"), 1500);
     }
   } catch (err: any) {
     error.value = err.message || "Terjadi kesalahan saat pendaftaran.";
@@ -180,9 +180,9 @@ const handleRegister = async () => {
             <select v-model="role" class="select bg-base-200/50 border-base-content/5 rounded-2xl pl-12 w-full focus:border-primary/50 text-base-content font-medium h-12 focus:outline-none focus:ring-4 focus:ring-primary/10 appearance-none" required>
               <option disabled value="">{{ i18n.placeholders.role }}</option>
               <option value="Admin">Admin</option>
-              <!-- Anda bisa tambahkan atau ubah role lainnya di sini -->
-              <!-- <option value="Guru">Guru</option> -->
-              <!-- <option value="Siswa">Siswa</option> -->
+              <!-- Sesuai permintaan Anda, role ditambahkan -->
+              <option value="Teacher">Teacher</option>
+              <option value="Siswa">Siswa</option>
             </select>
             
             <!-- Ikon panah bawah kustom -->

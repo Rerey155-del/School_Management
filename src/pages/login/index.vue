@@ -53,7 +53,17 @@ const handleLogin = async () => {
   try {
     const success = await login({ username: username.value, password: password.value });
     if (success) {
-      router.push("/");
+      const { user } = useAuth();
+      const role = user.value?.role;
+
+      // Redirect berdasarkan role masing-masing
+      if (role === 'Teacher') {
+        router.push("/guru");
+      } else if (role === 'Siswa') {
+        router.push("/siswa");
+      } else {
+        router.push("/"); // Default dashboard untuk Admin atau lainnya
+      }
     }
   } catch (err: any) {
     error.value = i18n.value.errors.invalid;

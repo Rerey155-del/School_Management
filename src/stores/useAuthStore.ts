@@ -50,10 +50,9 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await authService.register(data);
-        this.user = response.user;
-        localStorage.setItem('user', JSON.stringify(response.user));
-        localStorage.setItem('token', response.token);
+        await authService.register(data);
+        // Sesuai permintaan: setelah register, jangan auto-login (simpan session/token).
+        // Biarkan user login manual nanti.
         return true;
       } catch (err: any) {
         this.error = err.message || 'Registration failed';

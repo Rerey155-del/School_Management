@@ -18,7 +18,19 @@ const routes = [
         path: '/',
         name : 'dashboard',
         component: () => import('@/pages/dashboard/index.vue'),
-        meta: { requiresAuth: true, title: 'Dashboard' }
+        meta: { requiresAuth: true, title: 'Dashboard Admin' }
+    },
+    {
+        path: '/guru',
+        name : 'dashboard-guru',
+        component: () => import('@/pages/guru/index.vue'),
+        meta: { requiresAuth: true, title: 'Dashboard Guru' }
+    },
+    {
+        path: '/siswa',
+        name : 'dashboard-siswa',
+        component: () => import('@/pages/siswa/index.vue'),
+        meta: { requiresAuth: true, title: 'Dashboard Siswa' }
     },
     {
         path: '/settings',

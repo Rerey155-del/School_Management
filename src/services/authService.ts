@@ -39,6 +39,15 @@ export const authService = {
 
   async register(data: { full_name: string; username: string; email: string; password?: string; role?: string }): Promise<{ user: UserType, token: string }> {
     try {
+      // Pengecekan role khusus
+      if (data.role === 'Teacher') {
+        // TODO: Tulis logika spesifik untuk pendaftaran Teacher di sini
+        // (Seperti yang Anda minta, bagian ini dibiarkan untuk Anda tulis sendiri)
+      } else if (data.role === 'Siswa') {
+        // TODO: Tulis logika spesifik untuk pendaftaran Siswa di sini
+        // (Bagian ini juga dibiarkan untuk Anda tulis sendiri)
+      }
+
       // Endpoint backend adalah POST /users, dan ia mengembalikan token JWT juga (dibuat di backend)
       const response = await apiClient.post('/users', { ...data, status: 'Aktif' });
       
