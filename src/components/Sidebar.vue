@@ -88,7 +88,7 @@ const handleLogout = () => {
         </li>
       </template>
 
-      <!-- Static Settings System section -->
+      <!-- Static Settings System section disini -->
       <li
         class="menu-title uppercase text-xs font-bold tracking-widest text-base-content/40 mt-6"
       >
